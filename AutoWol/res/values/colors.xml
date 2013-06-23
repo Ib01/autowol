@@ -1,0 +1,12 @@
+<resources>
+    <color name="awol_white">#FFFFFF</color>
+    <color name="awol_blue">#1D80BF</color>
+    <color name="awol_grey">#3D3D3D</color>
+    <color name="awol_green">#809130</color>
+    
+    
+    <color name="text">#000000</color>
+    <color name="dissabled_text">#808080</color>
+    
+    
+</resources>

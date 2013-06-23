@@ -1,0 +1,13 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <item android:id="@+id/device_list_context_menu_delete"
+        android:title="@string/delete_host_button_title"
+        android:showAsAction="ifRoom"
+        android:icon="@drawable/ic_action_delete"></item>
+    
+    <item android:id="@+id/device_list_context_menu_wake"
+        android:title="@string/wake_host_button_title"
+        android:showAsAction="ifRoom"
+        android:icon="@drawable/ic_action_power"></item>
+    
+</menu>
