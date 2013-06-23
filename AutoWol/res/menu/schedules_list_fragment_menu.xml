@@ -1,0 +1,8 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+   
+    <item android:id="@+id/schedules_list_fragment_add"
+        android:title="@string/add_host_button_title"
+        android:showAsAction="always"
+        android:icon="@drawable/ic_action_add"></item>
+    
+</menu>

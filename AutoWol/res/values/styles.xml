@@ -1,0 +1,64 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="AppTheme" parent="android:Theme.Light" />
+    
+    
+<!-- <style name="Theme.Styled" parent="Theme.Sherlock.Light.DarkActionBar">
+  <item name="actionBarStyle">@style/Widget.Styled.ActionBar</item>
+  <item name="android:actionBarStyle">@style/Widget.Styled.ActionBar</item>
+</style>
+
+<style name="Widget.Styled.ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
+    <item name="background">@drawable/bg_striped</item>
+    <item name="android:background">@drawable/bg_striped</item>
+
+    <item name="backgroundSplit">@drawable/bg_striped_split</item>
+    <item name="android:backgroundSplit">@drawable/bg_striped_split</item>
+</style> -->
+    
+    
+        
+    	<!-- <item name="android:actionBarStyle">@style/MyActionBar</item>
+        <item name="actionDropDownStyle">@style/MyActionDropDown</item>     -->
+    
+    <!-- the theme applied to the application or activity -->
+    <style name="AutoWolTheme" parent="Theme.Sherlock.Light">
+        <item name="android:actionBarStyle">@style/MyActionBar</item>
+        <item name="actionBarStyle">@style/MyActionBar</item>
+    	
+        <item name="android:actionDropDownStyle">@style/MyDropDownNav</item>
+        <item name="actionDropDownStyle">@style/MyDropDownNav</item>
+        
+        <!-- <item name="android:spinnerDropDownItemStyle">@style/MyDropDownItemStyle</item>
+        <item name="spinnerDropDownItemStyle">@style/MyDropDownItemStyle</item> -->
+    </style>
+
+    <!-- style for the action bar backgrounds -->
+    <style name="MyActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">#0F4366</item>
+        <item name="background">#0F4366</item>
+    </style>
+
+     <!-- style the list navigation -->
+    <style name="MyDropDownNav" parent="Widget.Sherlock.Light.Spinner.DropDown.ActionBar">
+        <item name="android:background">@drawable/ad_spinner_background_holo_light</item>
+        <item name="android:popupBackground">#FFFFFF</item>
+        
+        
+        
+        <!-- <item name="android:dropDownSelector">#FFFD00</item> -->
+    </style>
+    
+      <!-- style the list navigation -->
+    <!-- <style name="MyDropDownItemStyle" parent="Widget.Sherlock.DropDownItem.Spinner">
+        <item name="android:background">@drawable/ad_spinner_background_holo_light</item>
+        <item name="android:popupBackground">#7F7E13</item>
+        <item name="android:dropDownSelector">#FFFD00</item>
+    </style> -->
+
+    
+    
+    
+    
+    
+</resources>

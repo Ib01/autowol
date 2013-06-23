@@ -1,0 +1,7 @@
+<resources>
+    <string-array name="activity_view_List">
+        <item>Wake</item>
+        <item>Schedule</item>
+        <item>Configure</item>
+    </string-array>
+</resources>    
