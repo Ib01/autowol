@@ -39,7 +39,8 @@ public class MainActivity extends SherlockFragmentActivity
         
         InitialiseActionBar();
         _scanStartListeners = new ArrayList<OnScanStartListener>();
-        
+          
+        //change test 
     }
    
     @Override
