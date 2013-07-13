@@ -175,9 +175,7 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 		public void onNothingSelected(AdapterView<?> arg0) {
 			// TODO Auto-generated method stub
 		}
-	
 	}
-	
 	
 	@Override
 	public void onScanStart() 
@@ -185,19 +183,6 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 		if(initialiseNetworkSpinner())
 			ScanNetwork();
 	}
-	
-	
-
-	@Override
-	public void onStop() 
-	{
-		//fragment is hidden here
-		super.onStop();
-
-		_pinger.stop();		
-		Log.i(TAG, "onStop");
-	}
-		
 
 	@Override
 	public void onPingComplete(boolean success) 
@@ -224,7 +209,15 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 			_deviceListView.showDeviceOff(result.device);
 	}
 	
-	
+	@Override
+	public void onStop() 
+	{
+		//fragment is hidden here
+		super.onStop();
+
+		_pinger.stop();		
+		Log.i(TAG, "onStop");
+	}
 	
 	@Override
 	public void onDestroy()
@@ -233,32 +226,13 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 		_hostEnumerator.stop();
 	}
 	
-	
-	@Override
-	public void onAttach (Activity activity)
-	{
-		super.onAttach(activity);
-	}
-	
-	@Override
-	public void onDetach ()
-	{
-		super.onDetach();
-	}
-	
-	
-	
 	@Override
 	public void onScanProgress(ThreadResult thread) 
 	{
 		if(thread.device != null)
 		{
-			if(_deviceListView.isInList(thread.device.getMacAddress()))
-				_deviceListView.updateDevice(thread.device);
-			else
-				_deviceListView.addDevice(thread.device);
+			UpdateDevicelist(thread.device);
 		}
-		
 	}
 		
 	@Override
@@ -277,12 +251,31 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 		_progressDialog.dismiss();
 	}
 
-
+	//called after AddDeviceActivity has completed successfully
+	public void addDevice(int deviceId) 
+	{
+		Database database = new Database(getActivity());
+		database.open();
+		
+		Device d = database.getDevice(deviceId);
+		UpdateDevicelist(d);
+		
+		database.close();
+	}
 	
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	// Utilities //////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	
+	public void UpdateDevicelist(Device device)
+	{
+		if(_deviceListView.isInList(device.getMacAddress()))
+			_deviceListView.updateDevice(device);
+		else
+			_deviceListView.addDevice(device);
+	}
 	
 	
 	public boolean initialiseNetworkSpinner()
@@ -377,16 +370,22 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 		@Override
 		public boolean actionItemClicked(ActionMode mode, MenuItem item) 
 		{
+			List<Device> dl = getSelectedItems();
+			
 			if(item.getItemId() == R.id.device_list_context_menu_delete)
 			{
-	            	mode.finish();
-	                return false;
+				Database database = new Database(getActivity());
+				database.open();
+				
+				database.deleteDevices(dl);
+				_deviceListView.removeDevices(dl);
+			
+            	mode.finish();
+                return false;
 			}
 			else if(item.getItemId() == R.id.device_list_context_menu_wake)
 			{
-				List<Device> dl = getSelectedItems();
 				Device[] da = dl.toArray(new Device[dl.size()]);
-				
 				WolSender sender = new WolSender();
 				sender.execute(da);
 			}
@@ -396,11 +395,7 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 	}
 
 
-	//called after AddDeviceActivity has completed successfully
-	public void addDevice(String string) 
-	{
-		
-	}
+	
 	
 	
 

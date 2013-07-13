@@ -170,13 +170,18 @@ public class Database {
 	  }
 	  
 	  
+	  public int addDevice(Device device, String routerBssid)
+	  {
+		  Router r = getRouterForBssid(routerBssid);
+		  return addDevice(device, r.getPrimaryKey());
+	  }
+	  
 	  public int addDevice(Device device, int routerId)
 	  {
 		  device.setRouterId(routerId);
 		  ContentValues contentValues = getDeviceContentValues(device);
 		  return (int)db.insert(TABLE_DEVICE, null, contentValues);
 	  }
-	  
 	  
 	  public int updateDevice(Device device)
 	  {
@@ -254,8 +259,24 @@ public class Database {
 		  
 		  return null;
 	  }
-	 
 	  
+
+	  public void deleteDevices(List<Device> devices) 
+	  {
+		  for(Device d : devices)
+			  deleteDevice(d.getPrimaryKey());
+	  }
+	  
+	  public int deleteDevice(int deviceId) 
+	  {
+		  String[] params = {((Integer)deviceId).toString()};
+		  
+		  //delete operation useses cascade delete triggers so we don't have 
+		  //to do anything other than delete the location. this will also delete 
+		  //any attached actions and plugins
+		  return db.delete(TABLE_DEVICE, COLUMN_DEVICE_ID + "=?" , params);
+	  }
+	   
 	  public int saveRouter(Router router)
 	  {
 		  Router r = getRouterForBssid(router.getBssid());
@@ -350,7 +371,6 @@ public class Database {
 		  return db.delete(TABLE_DEVICE, COLUMN_DEVICE_ROUTER_ID + "=?" , params);
 	  }
 
-	  
 	  public void saveDevicesForRouter(List<Device> devices, int routerId) 
 	  {
 		  for(Device d : devices)

@@ -128,7 +128,6 @@ public class DeviceListView extends ListView
 				dev.setLive(false);
 			}
 		}
-
 	}
 
 	public List<Device> GetItems()
@@ -155,6 +154,17 @@ public class DeviceListView extends ListView
 		
 		return null;
 	}
+	
+	public void removeDevices(List<Device> devices)
+	{
+		for(Device d : devices)
+		{
+			Device dref = GetDeviceForMac(d.getMacAddress());
+			_deviceListadapter.remove(dref);	
+		}
+		_deviceListadapter.notifyDataSetChanged();
+	}
+	
 	
 	public void addDevice(Device device)
 	{

@@ -152,8 +152,14 @@ public class MainActivity extends SherlockFragmentActivity
 				}
 				break;
 			case AddDeviceActivityRequest:
-				if (resultCode == RESULT_OK) {
-					_actionBarNavigationListener.getDevicesListFragment().addDevice("");					
+				if (resultCode == RESULT_OK) 
+				{
+					int pk = data.getIntExtra("DeviceId", -1);
+					if(pk != -1)
+					{
+						_actionBarNavigationListener.getDevicesListFragment().addDevice(pk);
+					}
+					//TODO: else???
 				}
 				break;
 		}
