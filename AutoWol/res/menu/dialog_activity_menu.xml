@@ -1,0 +1,13 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+   
+    <item android:id="@+id/dialog_activity_cancel"  
+        android:title="Cancel"
+        android:showAsAction="always"
+        android:icon="@drawable/ic_cross"></item>
+    
+    <item android:id="@+id/dialog_activity_add"
+        android:title="Add"
+        android:showAsAction="always"
+        android:icon="@drawable/ic_tick"></item>
+    
+</menu>

@@ -18,7 +18,7 @@ public class AddScheduleActivity extends Activity implements OnClickListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_schedule_activity);
         
-
+        
 		Button b = (Button) findViewById(R.id.add_schedule_activity_add);
 		b.setOnClickListener((android.view.View.OnClickListener) this);
         

@@ -4,17 +4,13 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="edit_message">Enter a message</string>
     <string name="button_send">Send</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="title_activity_display_message">My Message</string>
 
     <string name="wake_host_button_title">Wake Host</string>
     <string name="scan_network_button_title">Scan Network</string>
     <string name="delete_host_button_title">Delete Host</string>
     <string name="add_host_button_title">Add Host</string>
-    <string name="prompt_network_scan_dialog_fragment_message">Youre devices list is empty. Would you like scan your network for devices now?</string>
-    <string name="prompt_network_scan_dialog_fragment_ok">Yes</string>
-    <string name="prompt_network_scan_dialog_fragment_cancel">No</string>
-    <string name="prompt_network_scan_dialog_fragment_title">Scan for Devices</string>
+    <string name="add_device_activity_title">Add Device</string>
+    <string name="add_schedule_activity_title">Add Schedule</string>
     
 </resources>
 
