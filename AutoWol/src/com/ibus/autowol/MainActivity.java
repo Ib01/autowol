@@ -21,8 +21,8 @@ import com.ibus.autowol.ui.SchedulesListFragment;
 
 public class MainActivity extends SherlockFragmentActivity 
 {	
-	private static final int AddScheduleActivityRequest = 1;
-    private static final int AddDeviceActivityRequest = 2;
+	public static final int AddScheduleActivityRequest = 1;
+	public static final int AddDeviceActivityRequest = 2;
 	private static final String TAG = "MainActivity";
 	private ActionBarNavigationListener _actionBarNavigationListener;
 	List<OnScanStartListener> _scanStartListeners; 

@@ -25,7 +25,7 @@ public class Database {
 	  // DEVICE TABLE
 	  //
 	  public static final String TABLE_DEVICE = "device";
-	  public static final String COLUMN_DEVICE_ID="device_id";
+	  public static final String COLUMN_DEVICE_DEVICE_ID="device_id";
 	  public static final String COLUMN_DEVICE_ROUTER_ID="router_id";
 	  public static final String COLUMN_DEVICE_NAME="name";
 	  public static final String COLUMN_DEVICE_DISPLAY_NAME="display_name";
@@ -39,7 +39,7 @@ public class Database {
 		  "create table " 
 		  + TABLE_DEVICE 
 		  + " (" 
-		  + COLUMN_DEVICE_ID + " integer primary key autoincrement, " 
+		  + COLUMN_DEVICE_DEVICE_ID + " integer primary key autoincrement, " 
 		  + COLUMN_DEVICE_ROUTER_ID +  " integer not null, "
 		  + COLUMN_DEVICE_NAME + " text, "
 		  + COLUMN_DEVICE_DISPLAY_NAME + " text, "
@@ -51,7 +51,7 @@ public class Database {
 	  private static final String SQL_DROP_TABLE_DEVICE = "DROP TABLE IF EXISTS " + TABLE_DEVICE;
 	  
 	  
-	  public static final int ORDINAL_DEVICE_ID = 0;
+	  public static final int ORDINAL_DEVICE_DEVICE_ID = 0;
 	  public static final int ORDINAL_DEVICE_ROUTER_ID = 1;
 	  public static final int ORDINAL_DEVICE_NAME = 2;
 	  public static final int ORDINAL_DEVICE_DISPLAY_NAME = 3;
@@ -64,7 +64,7 @@ public class Database {
 	  // ROUTER TABLE
 	  //
 	  public static final String TABLE_ROUTER = "router";
-	  public static final String COLUMN_ROUTER_ID="router_id";
+	  public static final String COLUMN_ROUTER_ROUTER_ID="router_id";
 	  public static final String COLUMN_ROUTER_SSID="SSID"; //descriptive name of wifi hotspot
 	  public static final String COLUMN_ROUTER_IP="ip";
 	  public static final String COLUMN_ROUTER_MAC="mac";
@@ -76,7 +76,7 @@ public class Database {
 		  "create table " 
 		  + TABLE_ROUTER 
 		  + " (" 
-		  + COLUMN_ROUTER_ID + " integer primary key autoincrement, " 
+		  + COLUMN_ROUTER_ROUTER_ID + " integer primary key autoincrement, " 
 		  + COLUMN_ROUTER_SSID + " text not null, "
 		  + COLUMN_ROUTER_IP + " text, "
 		  + COLUMN_ROUTER_MAC + " text, "
@@ -87,7 +87,7 @@ public class Database {
 	  private static final String SQL_DROP_TABLE_ROUTER = "DROP TABLE IF EXISTS " + TABLE_ROUTER;
 	  
 	  
-	  public static final int ORDINAL_ROUTER_ID = 0;
+	  public static final int ORDINAL_ROUTER_ROUTER_ID = 0;
 	  public static final int ORDINAL_ROUTER_SSID = 1;
 	  public static final int ORDINAL_ROUTER_IP = 2;
 	  public static final int ORDINAL_ROUTER_MAC = 3;
@@ -96,20 +96,85 @@ public class Database {
 	  
 	  
 	  //
+	  // SCHEDULE TABLE
+	  //
+	  public static final String TABLE_SCHEDULE = "schedule";
+	  public static final String COLUMN_SCHEDULE_SCHEDULE_ID="schedule_id";
+	  public static final String COLUMN_SCHEDULE_ROUTER_ID="router_id"; 
+	  //public static final String COLUMN_SCHEDULE_DEVICE_ID="device_id";
+	  public static final String COLUMN_SCHEDULE_AFTER_TIME="after_time";
+	  public static final String COLUMN_SCHEDULE_BEFORE_TIME="before_time";
+	  
+	  private static final String SQL_CREATE_TABLE_SCHEDULE = 
+		  "create table " 
+		  + TABLE_SCHEDULE 
+		  + " (" 
+		  + COLUMN_SCHEDULE_SCHEDULE_ID + " integer primary key autoincrement, "
+		  + COLUMN_SCHEDULE_ROUTER_ID +  " integer not null, "
+		  + COLUMN_SCHEDULE_AFTER_TIME + " long not null, "
+		  + COLUMN_SCHEDULE_BEFORE_TIME + " long not null "
+		  + ");";
+	  
+	  private static final String SQL_DROP_TABLE_SCHEDULE = "DROP TABLE IF EXISTS " + TABLE_SCHEDULE;
+	  
+	  
+	  public static final int ORDINAL_SCHEDULE_SCHEDULE_ID = 0;
+	  public static final int ORDINAL_SCHEDULE_ROUTER_ID = 1;
+	  public static final int ORDINAL_SCHEDULE_AFTER_TIME  = 2;
+	  public static final int ORDINAL_SCHEDULE_BEFORE_TIME = 3;
+	 
+	  //
+	  // SCHEDULE DEVICE TABLE
+	  //
+	  public static final String TABLE_SCHEDULE_DEVICE = "schedule_device";
+	  public static final String COLUMN_SCHEDULE_DEVICE_SCHEDULE_DEVICE_ID="schedule_device_id";
+	  public static final String COLUMN_SCHEDULE_DEVICE_SCHEDULE_ID="schedule_id";
+	  public static final String COLUMN_SCHEDULE_DEVICE_DEVICE_ID="device_id";
+	  
+	  
+	  private static final String SQL_CREATE_SCHEDULE_DEVICE = 
+		  "create table " 
+		  + TABLE_SCHEDULE_DEVICE 
+		  + " (" 
+		  + COLUMN_SCHEDULE_DEVICE_SCHEDULE_DEVICE_ID + " integer primary key autoincrement, "
+		  + COLUMN_SCHEDULE_DEVICE_SCHEDULE_ID +  " integer not null, "
+		  + COLUMN_SCHEDULE_DEVICE_DEVICE_ID +  " integer not null "
+		  + ");";
+	  
+	  private static final String SQL_DROP_TABLE_SCHEDULE_DEVICE = "DROP TABLE IF EXISTS " + TABLE_SCHEDULE_DEVICE;
+	  
+	  
+	  public static final int ORDINAL_SCHEDULE_DEVICE_SCHEDULE_DEVICE_ID = 0;
+	  public static final int ORDINAL_SCHEDULE_DEVICE_SCHEDULE_ID = 1;
+	  public static final int ORDINAL_SCHEDULE_DEVICE_DEVICE_ID  = 2;
+	  
+	  
+	  //
 	  //TRIGGERS
 	  //
 	  public static final String TRIG_ROUTER_DELETE = "delete_"+ TABLE_ROUTER;
+	  public static final String TRIG_SCHEDULE_DELETE = "delete_"+ TABLE_SCHEDULE;
 	  
 	  private static final String SQL_CREATE_TRIGER_ROUTER_DELETE =
-	  "CREATE TRIGGER ["+TRIG_ROUTER_DELETE+"]" +
-	  " BEFORE DELETE" +
-	  " ON [" + TABLE_ROUTER + "]" +
-	  " FOR EACH ROW" +
-	  " BEGIN" +
-	  " DELETE FROM " + TABLE_DEVICE + " WHERE " + TABLE_DEVICE + "." + COLUMN_DEVICE_ROUTER_ID + " = old." + COLUMN_ROUTER_ID + ";" +
-	  " END";
+			  "CREATE TRIGGER ["+TRIG_ROUTER_DELETE+"]" +
+			  " BEFORE DELETE" +
+			  " ON [" + TABLE_ROUTER + "]" +
+			  " FOR EACH ROW" +
+			  " BEGIN" +
+			  " DELETE FROM " + TABLE_DEVICE + " WHERE " + TABLE_DEVICE + "." + COLUMN_DEVICE_ROUTER_ID + " = old." + COLUMN_ROUTER_ROUTER_ID + ";" +
+			  " END";
+	  
+	  private static final String SQL_CREATE_TRIGER_SCHEDULE_DELETE =
+			  "CREATE TRIGGER ["+TRIG_SCHEDULE_DELETE+"]" +
+			  " BEFORE DELETE" +
+			  " ON [" + TABLE_SCHEDULE + "]" +
+			  " FOR EACH ROW" +
+			  " BEGIN" +
+			  " DELETE FROM " + TABLE_SCHEDULE_DEVICE + " WHERE " + TABLE_SCHEDULE_DEVICE + "." + COLUMN_SCHEDULE_DEVICE_SCHEDULE_ID + " = old." + COLUMN_SCHEDULE_SCHEDULE_ID + ";" +
+			  " END";
 	  
 	  private static final String SQL_DROP_TRIGER_ROUTER_DELETE = "DROP TRIGGER IF EXISTS " + TRIG_ROUTER_DELETE;
+	  private static final String SQL_DROP_TRIGER_SCHEDULE_DELETE = "DROP TRIGGER IF EXISTS " + TRIG_SCHEDULE_DELETE;
 	  
 	  
 	  //
@@ -122,14 +187,14 @@ public class Database {
 			  "select * from " + TABLE_ROUTER;
 	  
 	  private static final String SQL_GET_ROUTER = 
-			  "select * from " + TABLE_ROUTER + " where " + COLUMN_ROUTER_ID + "=?";
+			  "select * from " + TABLE_ROUTER + " where " + COLUMN_ROUTER_ROUTER_ID + "=?";
 	  
 	  private static final String SQL_GET_ROUTER_FOR_BSSID = 
 			  "select * from " + TABLE_ROUTER + " where " + COLUMN_ROUTER_BSSID + "=?";
 	  
 	  
 	  private static final String SQL_GET_DEVICE = 
-			  "select * from " + TABLE_DEVICE + " where " + COLUMN_DEVICE_ID + "=?";
+			  "select * from " + TABLE_DEVICE + " where " + COLUMN_DEVICE_DEVICE_ID + "=?";
 	  
 	  private static final String SQL_GET_DEVICE_FOR_MAC = 
 			  "select * from " + TABLE_DEVICE + " where " + COLUMN_DEVICE_MAC + "=?";
@@ -274,7 +339,7 @@ public class Database {
 		  //delete operation useses cascade delete triggers so we don't have 
 		  //to do anything other than delete the location. this will also delete 
 		  //any attached actions and plugins
-		  return db.delete(TABLE_DEVICE, COLUMN_DEVICE_ID + "=?" , params);
+		  return db.delete(TABLE_DEVICE, COLUMN_DEVICE_DEVICE_ID + "=?" , params);
 	  }
 	   
 	  public int saveRouter(Router router)
@@ -335,7 +400,7 @@ public class Database {
 		  //delete operation useses cascade delete triggers so we don't have 
 		  //to do anything other than delete the router. this will also delete 
 		  //any related actions and devices
-		  return db.delete(TABLE_ROUTER, COLUMN_ROUTER_ID + "=?" , params);
+		  return db.delete(TABLE_ROUTER, COLUMN_ROUTER_ROUTER_ID + "=?" , params);
 	  }
 	 
 	  
@@ -406,7 +471,7 @@ public class Database {
 	  private Device cursorRowToDevice(Cursor cursor)
 	  {
 			Device h = new Device();
-			h.setPrimaryKey(cursor.getInt(ORDINAL_DEVICE_ID));
+			h.setPrimaryKey(cursor.getInt(ORDINAL_DEVICE_DEVICE_ID));
 			h.setRouterId(cursor.getInt(ORDINAL_DEVICE_ROUTER_ID));
 			h.setName(cursor.getString(ORDINAL_DEVICE_NAME));
 			h.setDisplayName(cursor.getString(ORDINAL_DEVICE_DISPLAY_NAME));
@@ -421,7 +486,7 @@ public class Database {
 	  private Router cursorRowToRouter(Cursor cursor) 
 	  {
 		  	Router h = new Router();
-			h.setPrimaryKey(cursor.getInt(ORDINAL_ROUTER_ID));
+			h.setPrimaryKey(cursor.getInt(ORDINAL_ROUTER_ROUTER_ID));
 			h.setSsid(cursor.getString(ORDINAL_ROUTER_SSID));
 			h.setIpAddress(cursor.getString(ORDINAL_ROUTER_IP));
 			h.setMacAddress(cursor.getString(ORDINAL_ROUTER_MAC));

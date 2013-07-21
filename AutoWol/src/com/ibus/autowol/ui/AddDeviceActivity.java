@@ -32,9 +32,6 @@ public class AddDeviceActivity extends SherlockActivity
 		ab.setDisplayHomeAsUpEnabled(true);
     }
 
-	 
-	
-	
 	
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) 
