@@ -2,18 +2,55 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:layout_marginRight="5dp"
+	android:layout_marginLeft="5dp">
 
-	  
-  <TextView android:layout_width="match_parent"
-    android:layout_height="match_parent" android:text="add schedule">
-  </TextView>
     
-     <Button
-	    android:id="@+id/add_schedule_activity_add"
-	    android:layout_weight="1"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:text="Add" />
+    <TextView android:layout_width="match_parent"
+    	android:layout_height="wrap_content" 
+    	android:text="When connecting to:" android:paddingTop="20dp">
+  	</TextView>
+  	<Spinner
+        android:id="@+id/add_schedule_activity_networks"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"/>
+    
+	<TextView android:layout_width="match_parent"
+    	android:layout_height="wrap_content" 
+    	android:text="If the time is after" android:paddingTop="12dp">
+  	</TextView>
+    <TimePicker
+        android:id="@+id/timePicker1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    
+    <TextView android:layout_width="match_parent"
+    	android:layout_height="wrap_content" 
+    	android:text="and before" android:paddingTop="12dp">
+  	</TextView>
+    <TimePicker
+        android:id="@+id/timePicker2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+  	
+  	
+  	<TextView android:layout_width="match_parent"
+    	android:layout_height="wrap_content" 
+    	android:text="Wake the following devices:" android:paddingTop="12dp">
+  	</TextView>
+  	<ListView 
+  	    android:layout_width="match_parent"
+    android:layout_height="50dp">
+  	</ListView>
+  	
+  	
+   
+	 
+     
+     
 
 </LinearLayout>

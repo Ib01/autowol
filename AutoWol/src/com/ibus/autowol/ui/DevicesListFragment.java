@@ -1,5 +1,6 @@
 package com.ibus.autowol.ui;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +28,7 @@ import com.ibus.autowol.backend.Factory;
 import com.ibus.autowol.backend.IHostEnumerator;
 import com.ibus.autowol.backend.INetwork;
 import com.ibus.autowol.backend.IPinger;
+import com.ibus.autowol.backend.Network;
 import com.ibus.autowol.backend.Router;
 import com.ibus.autowol.backend.ThreadResult;
 import com.ibus.autowol.backend.WolSender;
@@ -386,8 +388,20 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 			else if(item.getItemId() == R.id.device_list_context_menu_wake)
 			{
 				Device[] da = dl.toArray(new Device[dl.size()]);
-				WolSender sender = new WolSender();
-				sender.execute(da);
+				
+				String s;
+				try 
+				{
+					s = _network.getBroadcastAddress();
+					WolSender sender = new WolSender(s);
+					sender.execute(da);
+				} 
+				catch (IOException e) 
+				{				
+					e.printStackTrace();
+				}
+				
+				
 			}
 			
 			return true;

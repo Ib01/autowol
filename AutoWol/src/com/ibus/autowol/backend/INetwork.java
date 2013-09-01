@@ -6,6 +6,8 @@
 //am start -a android.intent.action.MAIN -n com.android.settings/.wifi.WifiSettings
 package com.ibus.autowol.backend;
 
+import java.io.IOException;
+
 import android.content.Context;
 
 public interface INetwork 
@@ -20,6 +22,10 @@ public interface INetwork
     public boolean isMobileNetworkConnected(Context ctxt); 
     
     public boolean isWifiNetworkConnected(Context ctxt);
+    
+	public String getBroadcastAddress() throws IOException; 
+
+    
     
     /*public boolean getMobileInfo();
     public String getNetIp();*/

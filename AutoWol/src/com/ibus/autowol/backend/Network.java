@@ -6,6 +6,7 @@
 //am start -a android.intent.action.MAIN -n com.android.settings/.wifi.WifiSettings
 package com.ibus.autowol.backend;
 
+import java.io.IOException;
 import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -14,6 +15,7 @@ import java.util.Enumeration;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
+import android.net.DhcpInfo;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -193,6 +195,31 @@ public class Network implements INetwork
         else
         	return IpAddress.getStringFromLongUnsigned(end);	
 	}
+	
+	
+	/**
+	   * Calculate the broadcast IP we need to send the packet along. If we send it
+	   * to 255.255.255.255, it never gets sent. I guess this has something to do
+	   * with the mobile network not wanting to do broadcast.
+	   */
+	  public String getBroadcastAddress() throws IOException 
+	  {
+			WifiManager wifiManager = (WifiManager) _context.getSystemService(Context.WIFI_SERVICE);
+	
+			DhcpInfo dhcp = wifiManager.getDhcpInfo();
+			if (dhcp == null) {
+			  Log.d(TAG, "Could not get dhcp info");
+			  return null;
+			}
+			
+			int broadcast = (dhcp.ipAddress & dhcp.netmask) | ~dhcp.netmask;
+			byte[] quads = new byte[4];
+			for (int k = 0; k < 4; k++)
+			  quads[k] = (byte) ((broadcast >> k * 8) & 0xFF);
+			
+			InetAddress ad = InetAddress.getByAddress(quads);
+			return ad.getHostAddress();
+	  }
 	
 	
 }

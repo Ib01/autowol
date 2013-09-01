@@ -1,5 +1,7 @@
 package com.ibus.autowol.mock;
 
+import java.io.IOException;
+
 import android.content.Context;
 
 import com.ibus.autowol.backend.INetwork;
@@ -109,6 +111,12 @@ public class MockNetwork implements INetwork
     {
 		_isWifiNetworkConnected = isConnected;
     }
+
+	@Override
+	public String getBroadcastAddress() throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }
 
