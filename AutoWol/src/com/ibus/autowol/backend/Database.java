@@ -196,6 +196,7 @@ public class Database {
 		  }
 		  else
 		  {
+			  //TODO: why would device not already have a routerPK?
 			  device.setRouterId(routerPk);
 			  return updateDevice(device);
 		  }

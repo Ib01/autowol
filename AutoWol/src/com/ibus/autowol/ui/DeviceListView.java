@@ -176,6 +176,14 @@ public class DeviceListView extends ListView
 	}
 	
 	
+	public void saveDevice(Device device)
+	{
+		if(isInList(device.getMacAddress()))
+			updateDevice(device);
+		else
+			addDevice(device);
+	}
+	
 	
 	
 	// /////////////////////////////////////////////////////////////////////////////////////////////////
