@@ -19,7 +19,7 @@ public interface INetwork
     
     public boolean isMobileNetworkConnected(Context ctxt); 
     
-    public boolean isWifiNetworkConnected(Context ctxt);
+    public boolean isWifiConnected(Context ctxt);
     
     /*public boolean getMobileInfo();
     public String getNetIp();*/

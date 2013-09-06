@@ -15,7 +15,6 @@ import com.ibus.autowol.ui.ActivityListItem;
 import com.ibus.autowol.ui.AddDeviceActivity;
 import com.ibus.autowol.ui.AddScheduleActivity;
 import com.ibus.autowol.ui.DevicesListFragment;
-import com.ibus.autowol.ui.DevicesListFragment2;
 import com.ibus.autowol.ui.NavigationSpinnerAdapter;
 import com.ibus.autowol.ui.OnScanStartListener;
 import com.ibus.autowol.ui.SchedulesListFragment;
@@ -194,7 +193,7 @@ public class MainActivity extends SherlockFragmentActivity
 	
 	public class ActionBarNavigationListener implements ActionBar.OnNavigationListener
 	{
-		private DevicesListFragment2 _devicesListFragment;
+		private DevicesListFragment _devicesListFragment;
 		private SchedulesListFragment _schedulesListFragment;
 		
 		
@@ -223,7 +222,7 @@ public class MainActivity extends SherlockFragmentActivity
 		
 		private boolean displayDevicesFragment()
 		{
-			DevicesListFragment2 devicesListFragment = getDevicesListFragment();
+			DevicesListFragment devicesListFragment = getDevicesListFragment();
 			
 			FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 			ft.replace(android.R.id.content, devicesListFragment);
@@ -243,11 +242,11 @@ public class MainActivity extends SherlockFragmentActivity
 			return true;  
 		}
 
-		public DevicesListFragment2 getDevicesListFragment()
+		public DevicesListFragment getDevicesListFragment()
 		{
 			if(_devicesListFragment == null)
 			{
-				_devicesListFragment = (DevicesListFragment2)SherlockFragment.instantiate(MainActivity.this, DevicesListFragment2.class.getName()); 
+				_devicesListFragment = (DevicesListFragment)SherlockFragment.instantiate(MainActivity.this, DevicesListFragment.class.getName()); 
 				addScanStartListener(_devicesListFragment);
 			}
 			

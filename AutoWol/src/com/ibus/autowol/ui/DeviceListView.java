@@ -20,15 +20,15 @@ public class DeviceListView extends ListView
 {
 	HostListAdapter _deviceListadapter;
 	private List<Device> _devices;
-	private String _routerBssid = "";
+	//private String _routerBssid = "";
 
-	public String getRouterBssid() {
+/*	public String getRouterBssid() {
 		return _routerBssid;
 	}
 
 	public void setRouterBssid(String _routerBssid) {
 		this._routerBssid = _routerBssid;
-	}
+	}*/
 
 	public DeviceListView(Context context) {
 		super(context);
@@ -60,24 +60,49 @@ public class DeviceListView extends ListView
 		_deviceListadapter.notifyDataSetChanged();
 	}
 	
-	public void setDevices(List<Device> devices, List<String> macAddresses) {
+	/*public void setDevices(List<Device> devices, List<String> macAddresses) {
 		_deviceListadapter.clear();
 		_deviceListadapter.addAll(devices);
 		setLiveDevices(macAddresses);
 		_deviceListadapter.notifyDataSetChanged();
 	}
-	
+	*/
 
 	//this status will be picked up when the view is created in our adapter
-	public void setLiveDevices(List<String> macAddresses)
+	/*public void setLiveDevices(List<String> macAddresses)
 	{
+		for(String m : macAddresses)
+		{
+			setDeviceLive(m);
+		}
+	}*/
+	
+	public Device setDeviceLive(String macAddresses, boolean isLive)
+	{
+		Device ret = null;
+		
 		for(Device d : _devices)
 		{
-			for(String m : macAddresses)
-			{
-				if(d.getMacAddress().equals(m))
-					d.setLive(true);
+			if(d.getMacAddress().equals(macAddresses)){
+				d.setIsLive(isLive);
+				ret = d;
 			}
+		}		
+		
+		refreshViewStyle(macAddresses);
+		
+		return ret;
+	}
+	
+	private void refreshViewStyle(String macAddresses) 
+	{
+		for (int i = 0; i < this.getChildCount(); ++i) 
+		{
+			View v = this.getChildAt(i);
+			Device dev = (Device) v.getTag();
+			
+			if (dev.getMacAddress().equals(macAddresses)) 
+				setViewStyle(v);
 		}
 	}
 	
@@ -87,7 +112,7 @@ public class DeviceListView extends ListView
 		
 		for (Device d : _devices) 
 		{
-			if (d.isLive()) 
+			if (d.getIsLive()) 
 			{
 				dl.add(d.getMacAddress());
 			}
@@ -96,7 +121,10 @@ public class DeviceListView extends ListView
 		return dl;
 	}
 	
-	//only usefull if the device is in the list which it wont be 
+	
+	
+	
+	/*//only usefull if the device is in the list which it wont be 
 	//if we call this straight after adding it  
 	public void showDeviceOn(Device device) 
 	{
@@ -108,7 +136,7 @@ public class DeviceListView extends ListView
 			if (dev.getMacAddress().equals(device.getMacAddress())) 
 			{
 				setViewOn(v);
-				dev.setLive(true);
+				dev.setIsLive(true);
 			}
 		}
 	}
@@ -125,11 +153,11 @@ public class DeviceListView extends ListView
 			if (dev.getMacAddress().equals(device.getMacAddress())) 
 			{
 				setViewOff(v);
-				dev.setLive(false);
+				dev.setIsLive(false);
 			}
 		}
 
-	}
+	}*/
 
 	public List<Device> GetItems()
 	{
@@ -152,14 +180,7 @@ public class DeviceListView extends ListView
 			if(d.getMacAddress().equals(deviceMac))
 				return d;
 		}
-		
 		return null;
-	}
-	
-	public void addDevice(Device device)
-	{
-		_deviceListadapter.add(device);
-		_deviceListadapter.notifyDataSetChanged();
 	}
 	
 	public boolean isInList(String deviceMac)
@@ -168,20 +189,33 @@ public class DeviceListView extends ListView
 		return (d != null);
 	}
 	
+	
+	/*public void addDevice(Device device)
+	{
+		_deviceListadapter.add(device);
+		_deviceListadapter.notifyDataSetChanged();
+	}
+	
 	public void updateDevice(Device device)
 	{
 		Device d = GetDeviceForMac(device.getMacAddress());
 		d.copyFromScannedDevice(device);
 		_deviceListadapter.notifyDataSetChanged();
 	}
+	*/
 	
-	
-	public void saveDevice(Device device)
+	public void addDevice(Device device)
 	{
-		if(isInList(device.getMacAddress()))
-			updateDevice(device);
-		else
-			addDevice(device);
+		if(!isInList(device.getMacAddress()))
+		{
+			_deviceListadapter.add(device);
+		}
+		else{
+			Device d = GetDeviceForMac(device.getMacAddress());
+			d.copyFromScannedDevice(device);
+		}
+		
+		_deviceListadapter.notifyDataSetChanged();
 	}
 	
 	
@@ -190,6 +224,15 @@ public class DeviceListView extends ListView
 	// Utilities
 	// /////////////////////////////////////////////////////////////////////////////////////////////////
 
+	private void setViewStyle(View v)
+	{
+		if(((Device)v.getTag()).getIsLive())
+			setViewOn(v);
+		else
+			setViewOff(v); 
+	}
+	
+	
 	private void setViewOff(View v) 
 	{
 		TextView ip = (TextView) v.findViewById(R.id.host_list_item_ip_address);
@@ -263,12 +306,8 @@ public class DeviceListView extends ListView
 				mac.setText(host.getMacAddress());
 				pcName.setText(host.getName());
 				
-				if(host.isLive())
-					setViewOn(v);
-				else
-					setViewOff(v);
-				
 				v.setTag(host);
+				setViewStyle(v);
 			}
 			
 			return v;

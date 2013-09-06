@@ -94,7 +94,7 @@ public class Network implements INetwork
         return isConnectedTo(context, ConnectivityManager.TYPE_WIFI);
     }
     
-    public boolean isWifiNetworkConnected(Context context) 
+    public boolean isWifiConnected(Context context) 
     {
         return isConnectedTo(context, ConnectivityManager.TYPE_WIFI);
     }
