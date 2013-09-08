@@ -48,10 +48,10 @@ public class AddDeviceActivity extends SherlockActivity
         switch (item.getItemId()) 
         { 
             case R.id.dialog_activity_add:
-            	int pk = SaveDevice();
+            	/*int pk = SaveDevice();
             	Intent newIntent= new Intent();
         		newIntent.putExtra("DeviceId", pk);
-        		setResult(RESULT_OK, newIntent);
+        		setResult(RESULT_OK, newIntent);*/
         		finish();
             	break;
             default:
@@ -63,9 +63,9 @@ public class AddDeviceActivity extends SherlockActivity
         return true;
     }    
 	
+	 //TODO: LAYOUT NEEDS SORTING OUT
 	
-	
-	private int SaveDevice()
+	/*private int SaveDevice()
 	{
 		Database database = new Database(this);
 		database.open();
@@ -85,7 +85,7 @@ public class AddDeviceActivity extends SherlockActivity
 		
 		database.close();
 		return pk;
-	}
+	}*/
 	 	
 }
 

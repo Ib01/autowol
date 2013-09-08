@@ -102,7 +102,7 @@ public class MockNetwork implements INetwork
 	
 
 	@Override
-	public boolean isWifiNetworkConnected(Context context) {
+	public boolean isWifiConnected(Context context) {
 		// TODO Auto-generated method stub
 		return _isWifiNetworkConnected;
 	}

@@ -16,7 +16,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.ibus.autowol.R;
 import com.ibus.autowol.backend.Database;
 import com.ibus.autowol.backend.Device;
-import com.ibus.autowol.backend.Factory;
+import com.ibus.autowol.backend.Factory; 
 import com.ibus.autowol.backend.INetwork;
 import com.ibus.autowol.backend.Router;
 

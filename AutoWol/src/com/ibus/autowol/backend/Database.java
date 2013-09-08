@@ -18,7 +18,7 @@ public class Database {
 	  private final Context context;
 	  private myDbHelper dbHelper;
 	  
-	  private static final int DATABASE_VERSION = 9;
+	  private static final int DATABASE_VERSION = 10;
 	  private static final String DATABASE_NAME = "AutoWol2.db";
 	  	
 	  //
@@ -32,6 +32,7 @@ public class Database {
 	  public static final String COLUMN_DEVICE_IP="ip";
 	  public static final String COLUMN_DEVICE_MAC="mac";
 	  public static final String COLUMN_DEVICE_NIC_VENDOR="nic_vendor";
+	  public static final String COLUMN_DEVICE_IS_LIVE="is_live";
 	  
 	  
 	  
@@ -45,7 +46,8 @@ public class Database {
 		  + COLUMN_DEVICE_DISPLAY_NAME + " text, "
 		  + COLUMN_DEVICE_IP + " text not null, "
 		  + COLUMN_DEVICE_MAC + " text not null, "
-		  + COLUMN_DEVICE_NIC_VENDOR +  " text"
+		  + COLUMN_DEVICE_NIC_VENDOR +  " text,"
+		  + COLUMN_DEVICE_IS_LIVE +  " integer not null"
 		  + ");";
 	  
 	  private static final String SQL_DROP_TABLE_DEVICE = "DROP TABLE IF EXISTS " + TABLE_DEVICE;
@@ -58,6 +60,7 @@ public class Database {
 	  public static final int ORDINAL_DEVICE_IP = 4;
 	  public static final int ORDINAL_DEVICE_MAC = 5;
 	  public static final int ORDINAL_DEVICE_NIC_VENDOR = 6;
+	  public static final int ORDINAL_DEVICE_IS_LIVE = 7;
 	  
 	  
 	  //
@@ -266,6 +269,7 @@ public class Database {
 		  }
 		  else
 		  {
+			  //TODO: why would device not already have a routerPK?
 			  device.setRouterId(routerPk);
 			  return updateDevice(device);
 		  }
@@ -478,6 +482,7 @@ public class Database {
 			h.setIpAddress(cursor.getString(ORDINAL_DEVICE_IP));
 			h.setMacAddress(cursor.getString(ORDINAL_DEVICE_MAC));
 			h.setNicVendor(cursor.getString(ORDINAL_DEVICE_NIC_VENDOR));
+			h.setIsLive((cursor.getInt(ORDINAL_DEVICE_IS_LIVE) == 1)?true:false);
 			
 			return  h;
 	  }
@@ -522,6 +527,7 @@ public class Database {
 		  contentValues.put(COLUMN_DEVICE_IP, device.getIpAddress());
 		  contentValues.put(COLUMN_DEVICE_MAC, device.getMacAddress());
 		  contentValues.put(COLUMN_DEVICE_NIC_VENDOR, device.getNicVendor());
+		  contentValues.put(COLUMN_DEVICE_IS_LIVE, (device.getIsLive())?1:0);
 		  
 		  return contentValues;
 	  }

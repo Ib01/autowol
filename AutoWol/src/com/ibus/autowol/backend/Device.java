@@ -29,7 +29,7 @@ public class Device implements Serializable
 	
 	// Properties //////////////////////////////////////////////////////////
 
-	public boolean isBroadcastWake() {
+	public boolean getBroadcastWake() {
 		return broadcastWake;
 	}
 	public void setBroadcastWake(boolean broadcastWake) {
@@ -47,10 +47,10 @@ public class Device implements Serializable
 	public void setWakePort(String wakePort) {
 		this.wakePort = wakePort;
 	}
-	public boolean isLive() {
+	public boolean getIsLive() {
 		return isLive;
 	}
-	public void setLive(boolean isLive) {
+	public void setIsLive(boolean isLive) {
 		this.isLive = isLive;
 	}
 	public int getRouterId() {

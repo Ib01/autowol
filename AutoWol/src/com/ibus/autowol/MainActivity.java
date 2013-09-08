@@ -27,7 +27,7 @@ public class MainActivity extends SherlockFragmentActivity
 	private ActionBarNavigationListener _actionBarNavigationListener;
 	List<OnScanStartListener> _scanStartListeners; 
 	private int _optionsMenu;
-	
+	 
 
     @Override
     public void onCreate(Bundle savedInstanceState) 
@@ -154,11 +154,11 @@ public class MainActivity extends SherlockFragmentActivity
 			case AddDeviceActivityRequest:
 				if (resultCode == RESULT_OK) 
 				{
-					int pk = data.getIntExtra("DeviceId", -1);
+					/*int pk = data.getIntExtra("DeviceId", -1);
 					if(pk != -1)
 					{
 						_actionBarNavigationListener.getDevicesListFragment().addDevice(pk);
-					}
+					}*/
 					//TODO: else???
 				}
 				break;

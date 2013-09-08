@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -41,10 +42,7 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 	IHostEnumerator _hostEnumerator;
 	IPinger _pinger;
 	INetwork _network;
-	Spinner _netorkSpinner;
 	DeviceListView _deviceListView;
-	List<String> _savedLiveDevicesMac = new ArrayList<String>();
-	String _savedRouterBssid;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
@@ -74,24 +72,25 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
     public void onActivityCreated(Bundle savedInstanceState) 
 	{
 		Log.i(TAG, "DevicesListFragment.onActivityCreated is executing");
-		
 		super.onActivityCreated(savedInstanceState);
 		
-		//create device list
 		_deviceListView = (DeviceListView) getActivity().findViewById(R.id.host_list);
 		_deviceListView.setOnItemClickListener(new DeviceListClickListener()); 
 		
-		//create network spinner
-		_netorkSpinner = (Spinner) getActivity().findViewById(R.id.host_fragment_networks);
-		_netorkSpinner.setOnItemSelectedListener(new NetorkSelectedListener());
+		Router r = _network.getRouter();
+		saveRouter(r);
+		setNetworkHeader(r);
 		
-		if(!initialiseNetworkSpinner())
+		if(_network.isWifiConnected(getActivity()))
 		{
-			Database database = new Database(getActivity());
-			database.open();
-			populateRouterSpinner(database);
-			database.close();
+			boolean devicesFound = loadDevicesList(r);
+			if(!devicesFound)
+			{
+				//scan network if our network is up and we don't currently have any devices for it in our db 
+				ScanNetwork();	
+			}
 		}
+		
 	}
 	
 	
@@ -100,98 +99,74 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 	{
 		//fragment is visible here
 		super.onResume();
-		PingDevices();
+		
+		if(_network.isWifiConnected(getActivity()))
+			_pinger.start(_deviceListView.GetItems());
 	
 		Log.i(TAG, "onResume");
 	}
 
-	//
-	//Network Spinner selection changed
-	//
-	public class NetorkSelectedListener implements OnItemSelectedListener
+	@Override
+	public void onStop() 
 	{
-		//get or create devices on our network.  
-		@Override
-		public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,long arg3) 
-		{
-			//after memory clear arg1 is null. Looks like the activiy starts and this is called as part of initialisation and when it is called 
-			//arg1 is null. then straight after destroy is called and the activity is started again normally.
-			//TODO: figure out what is going on here 
-			if(arg1 == null)
-				return;
-			
-			String routerBssid = (String)arg1.getTag();
-			
-			Database database = new Database(getActivity());
-			database.open();
-			
-			List<Device> devices = database.getDevicesForRouter(routerBssid);
-			Log.i(TAG, String.format("%d devices found for router with bssid: %s", devices.size(), routerBssid));
-			
-			boolean isConnected =_network.isWifiNetworkConnected(getActivity());
-			if(isConnected)
-			{
-				if(devices.size() == 0)
-				{
-					//if this is the current network and it has no devices or we have not scanned for devices yet then scan
-					//TODO: prompt user "you currently dont have any devices listed for the network, would you like to scan for devices now?"
-					if(routerBssid.equals(_network.getRouter().getBssid()))
-						ScanNetwork();
-				}
-				else
-				{
-				
-					//We have selected the current network. restore last known live routers 
-					if(routerBssid.equals(_network.getRouter().getBssid()))
-					{
-						_deviceListView.setRouterBssid(routerBssid);
-						_deviceListView.setDevices(devices, _savedLiveDevicesMac);
-						_pinger.start(devices);
-					}
-					else
-					{
-						//last selected network was the current network. get a list of devices known to be live so we can 
-						//quickly show live routers when we come back
-						if(_deviceListView.getRouterBssid().equals(_network.getRouter().getBssid()))
-							_savedLiveDevicesMac = _deviceListView.getLiveDevices();	
-						
-						_deviceListView.setRouterBssid(routerBssid);
-						_deviceListView.setDevices(devices);
-						
-						/*TODO: we should be pausing the thread here not terminating*/
-						_pinger.stop();
-					}
-				}
-			}
-			else
-			{
-				_deviceListView.setRouterBssid(routerBssid);
-				_deviceListView.setDevices(devices);
-			}
-			
-			database.close();
-		}
-	
+		//fragment is hidden here
+		super.onStop();
+
+		_pinger.stop();
+		_hostEnumerator.stop();
+		Log.i(TAG, "onStop");
+	}
 		
-		@Override
-		public void onNothingSelected(AdapterView<?> arg0) {
-			// TODO Auto-generated method stub
-		}
+	@Override
+	public void onDestroy()
+	{
+		super.onDestroy();
+	}
+	
+	@Override
+	public void onAttach (Activity activity)
+	{
+		super.onAttach(activity);
+	}
+	
+	@Override
+	public void onDetach ()
+	{
+		super.onDetach();
 	}
 	
 	@Override
 	public void onScanStart() 
 	{
-		if(initialiseNetworkSpinner())
+		Router r = _network.getRouter();
+		saveRouter(r);
+		setNetworkHeader(r);
+		
+		if(_network.isWifiConnected(getActivity()))
+		{
 			ScanNetwork();
+			return;
+		}
+		Toast.makeText(getActivity(), "Network scan aborted: you are not connected to a network", Toast.LENGTH_LONG).show();
 	}
-
+	
 	@Override
-	public void onPingComplete(boolean success) 
+	public void onScanProgress(ThreadResult result) 
 	{
-		Log.i(TAG, "Ping complete");
+		if(result.device != null)
+		{
+			_deviceListView.addDevice(result.device);
+			saveDevice(result.device);
+		}
+	}
+	
+	@Override
+	public void onScanComplete() 
+	{
+		_progressDialog.dismiss();
 	}
 
+	
 	@Override
 	public void onPingProgress(ThreadResult result) 
 	{
@@ -203,126 +178,83 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 			return;
 		}
 		
-		if(result.success)
-		{
-			_deviceListView.showDeviceOn(result.device);
-		}
-		else
-			_deviceListView.showDeviceOff(result.device);
+		Device d = _deviceListView.setDeviceLive(result.device.getMacAddress(),result.success);
+		saveDevice(d);
 	}
 	
 	@Override
-	public void onStop() 
+	public void onPingComplete(boolean success) 
 	{
-		//fragment is hidden here
-		super.onStop();
-
-		_pinger.stop();		
-		Log.i(TAG, "onStop");
-	}
-	
-	@Override
-	public void onDestroy()
-	{
-		super.onDestroy();
-		_hostEnumerator.stop();
-	}
-	
-	@Override
-	public void onScanProgress(ThreadResult thread) 
-	{
-		if(thread.device != null)
-		{
-			UpdateDevicelist(thread.device);
-		}
-	}
-		
-	@Override
-	public void onScanComplete() 
-	{
-		Database database = new Database(getActivity());
-		database.open();
-		
-		Router r = database.getRouterForBssid(_network.getRouter().getBssid());
-		
-		//add or update all devices in our adapter to our db 
-		database.saveDevicesForRouter(_deviceListView.GetItems(), r.getPrimaryKey());
-		
-		database.close();
-		
-		_progressDialog.dismiss();
+		Log.i(TAG, "Ping complete");
 	}
 
-	//called after AddDeviceActivity has completed successfully
-	public void addDevice(int deviceId) 
-	{
-		Database database = new Database(getActivity());
-		database.open();
-		
-		Device d = database.getDevice(deviceId);
-		UpdateDevicelist(d);
-		
-		database.close();
-	}
 	
+	
+	
+	
+
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	// Utilities //////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	
-	public void UpdateDevicelist(Device device)
+	public void saveDevice(Device device) 
 	{
-		if(_deviceListView.isInList(device.getMacAddress()))
-			_deviceListView.updateDevice(device);
-		else
-			_deviceListView.addDevice(device);
+		Database database = new Database(getActivity());
+		database.open();
+		Router r = database.getRouterForBssid(_network.getRouter().getBssid());
+		database.saveDevice(device, r.getPrimaryKey());
+		database.close();
 	}
 	
-	
-	public boolean initialiseNetworkSpinner()
+	//Router router = _network.getRouter();
+	public void saveRouter(Router router) 
 	{
-		boolean isConnected =_network.isWifiNetworkConnected(getActivity());
-		
-		if(isConnected)
+		if(_network.isWifiConnected(getActivity()))
 		{
 			Database database = new Database(getActivity());
 			database.open();
-			
-			//update or create router
-			Router router = _network.getRouter();
 			database.saveRouter(router);
-	
-			//populate network spinner with all of our routers again since the list might have changed
-			populateRouterSpinner(database);
-			
-			//Select the router of our current network. Note the NetorkSelectedListener will fire regardless of 
-			//whether we select anything 
-			selectRouter(router.getBssid());
-			
 			database.close();
-			return true;
 		}
-		
-		Toast.makeText(getActivity(), "Network scan aborted: you are not connected to a network", Toast.LENGTH_LONG).show();
-		return false;
 	}
 	
-	
-	private void PingDevices()
+	public boolean loadDevicesList(Router router)
 	{
-		boolean isConnected =_network.isWifiNetworkConnected(getActivity());
-		if(!isConnected)
-			return;
+		List<Device> devices = new ArrayList<Device>();
 		
-		Router r =  (Router)_netorkSpinner.getSelectedItem();
+		Database database = new Database(getActivity());
+		database.open();
 		
-		//ping displayed devices if they belong to the network we are in
-		if(r.getBssid().equals(_network.getRouter().getBssid()))
-		{
-	        _pinger.start(_deviceListView.GetItems());
-		}
+		String bssid = router.getBssid();
+		devices = database.getDevicesForRouter(bssid);
+		_deviceListView.setDevices(devices);
+		
+		Log.i(TAG, String.format("%d devices found for router with bssid: %s", devices.size(), bssid));
+	
+		database.close();
+		
+		if(devices.size() <= 0)
+			return false;
+		
+		return true; 
 	}
+	
+	
+	public void setNetworkHeader(Router router)
+	{
+		TextView network = (TextView) getActivity().findViewById(R.id.host_fragment_networks);
+		
+		if(_network.isWifiConnected(getActivity()))
+		{
+			network.setText(router.getSsid());
+			return;
+		}
+		
+		network.setText("WiFi Unavailable");
+	}
+	
 	
 	private void ScanNetwork()
 	{
@@ -334,28 +266,6 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 		_progressDialog.show();
 		
 		_hostEnumerator.start(_network);
-	}
-	
-	private void populateRouterSpinner(Database database)
-	{
-		 List<Router> rl = database.getAllRouters();
-		 NetworkSpinnerAdapter ntwkAdapter =new NetworkSpinnerAdapter(rl, getActivity().getLayoutInflater()); 
-		 _netorkSpinner.setAdapter(ntwkAdapter);
-	}
-
-
-	private void selectRouter(String bssid)
-	{ 
-		 NetworkSpinnerAdapter ntwkAdapter = (NetworkSpinnerAdapter)_netorkSpinner.getAdapter();
-		 
-		 int pos = ntwkAdapter.GetPositionForBssid(bssid);
-		 if(pos != -1)
-		 {
-			 _netorkSpinner.setSelection(pos);
-			 Log.i(TAG, "router found in network spinner and selected");
-		 }
-		 else
-			 Log.i(TAG, "router was not found in our netowork spinner. SOMETHING HAS GONE WRONG.");
 	}
 	
 
@@ -372,35 +282,25 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 		@Override
 		public boolean actionItemClicked(ActionMode mode, MenuItem item) 
 		{
-			List<Device> dl = getSelectedItems();
-			
 			if(item.getItemId() == R.id.device_list_context_menu_delete)
 			{
-				Database database = new Database(getActivity());
-				database.open();
-				
-				database.deleteDevices(dl);
-				_deviceListView.removeDevices(dl);
-			
-            	mode.finish();
-                return false;
+	            	mode.finish();
+	                return false;
 			}
 			else if(item.getItemId() == R.id.device_list_context_menu_wake)
 			{
+				List<Device> dl = getSelectedItems();
 				Device[] da = dl.toArray(new Device[dl.size()]);
 				
-				String s;
-				try 
-				{
-					s = _network.getBroadcastAddress();
-					WolSender sender = new WolSender(s);
+				//TODO: should be logging and throwing hewre
+				WolSender sender;
+				try {
+					sender = new WolSender(_network.getBroadcastAddress());
 					sender.execute(da);
-				} 
-				catch (IOException e) 
-				{				
-					e.printStackTrace();
+				} catch (IOException e) {
+
+					Log.e(TAG, "could not get brodacast address for unknown reason", e);
 				}
-				
 				
 			}
 			
@@ -409,85 +309,14 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 	}
 
 
-	
-	
-	
-
-
-	/* @Override        
-	 public void onSaveInstanceState(Bundle SavedInstanceState) 
-	 {
-		 super.onSaveInstanceState(SavedInstanceState);
-		 
-		 Router r =  (Router)_netorkSpinner.getSelectedItem();
-		 if(r != null)
-			 SavedInstanceState.putString("CurrentRouterBssid", String.format("%d", _savedLiveDevicesMac.size()));
-		 
-		 if(_savedLiveDevicesMac.size() > 0)
-		 {
-			 SavedInstanceState.putString("LiveDevicesCount", Integer.toString(_savedLiveDevicesMac.size()));
-			 
-			 for(int i=0; i < _savedLiveDevicesMac.size(); ++i)
-				 SavedInstanceState.putString("Device_" + Integer.toString(i), _savedLiveDevicesMac.get(i));	 
-		 }
-		 
-		 Log.i(TAG, "Saved instance state");
-	 }
-	 
-	 public void restoreSavedState(Bundle SavedInstanceState)
-	 {
-		 if(SavedInstanceState != null)
-		 {
-			 _savedRouterBssid =  SavedInstanceState.getString("CurrentRouterBssid");
-			 
-			 if(SavedInstanceState.getString("LiveDevicesCount") != null)
-			 {
-				 int devicesCount = Integer.parseInt(SavedInstanceState.getString("LiveDevicesCount"));
-				 
-				 for(int i=0; i < devicesCount; ++i)
-				 {
-					 _savedLiveDevicesMac.add(SavedInstanceState.getString("Device_" + Integer.toString(i)));
-				 }
-			 }
-		 }
-		 
-	 }*/
-	 
-	
-	
+	//called after AddDeviceActivity has completed successfully
+	public void addDevice(String string) 
+	{
+		
+	}
 	
 	
 }
-
-
-
-
-/*private void PromptNetworkScan()
-{
-	PromptNetworkScanDialog dlg = new PromptNetworkScanDialog();
-	dlg.setCancelable(false);
-	dlg.onAttach(this);
-	dlg.show(((SherlockFragmentActivity)getActivity()).getSupportFragmentManager(), "PromptNetworkScanDialog");
-}*/
-
-
-/*@Override
-public void onPromptNetworkScanPositiveClick(DialogInterface dialog) 
-{
-	GoToNetworkScanActivity();
-}
-
-@Override
-public void onPromptNetworkScanNegativeClick(DialogInterface dialog) 
-{
-}*/
-
-/*public void GoToNetworkScanActivity()
-{
-	Intent intent = new Intent(getActivity(), NetworkScanActivity.class);
-    //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-    getActivity().startActivity(intent);
-}*/
 
 
 

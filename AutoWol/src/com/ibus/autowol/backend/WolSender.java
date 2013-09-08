@@ -68,7 +68,7 @@ public class WolSender extends AsyncTask<Device, Device, Void>
         	Log.e(TAG, "failed to send to Magic packet to: " + broadcastIp + " " + device.getMacAddress(),  e);
         }
 	}
-	
+	 
 	
 	
 	@Override

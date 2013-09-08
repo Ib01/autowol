@@ -21,11 +21,9 @@ public interface INetwork
     
     public boolean isMobileNetworkConnected(Context ctxt); 
     
-    public boolean isWifiNetworkConnected(Context ctxt);
+    public boolean isWifiConnected(Context ctxt);
     
-	public String getBroadcastAddress() throws IOException; 
-
-    
+    public String getBroadcastAddress() throws IOException; 
     
     /*public boolean getMobileInfo();
     public String getNetIp();*/

@@ -6,7 +6,7 @@ import java.net.UnknownHostException;
 
 import android.util.Log;
 
-public abstract class InetAddressManager 
+public abstract class InetAddressManager   
 {
 	private static final String TAG = "InetAddressManager";
 	
