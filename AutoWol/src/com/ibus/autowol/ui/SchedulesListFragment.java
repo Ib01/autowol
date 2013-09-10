@@ -21,7 +21,7 @@ public class SchedulesListFragment extends SherlockFragment
 	{
 		super.onCreateView(inflater, container, savedInstanceState);
 		
-		View v = inflater.inflate(R.layout.schedules_list_fragment, container, false);
+		View v = inflater.inflate(R.layout.schedules_list_fragment_layout, container, false);
 		
         return v;
 	}

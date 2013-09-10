@@ -7,9 +7,11 @@
     
     
     <LinearLayout 
-    android:layout_width="match_parent"
+    android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal" >
+    android:orientation="horizontal" 
+    android:background="@drawable/local_network_container"
+    android:layout_margin="5dp">
         <ImageView
             android:layout_width="wrap_content"
     		android:layout_height="wrap_content"
@@ -17,23 +19,14 @@
     	
         <TextView android:layout_width="wrap_content"
     		android:layout_height="wrap_content"
-    		android:id="@+id/host_fragment_networks"
+    		android:id="@+id/local_network_fragment_network"
     		android:textSize="24sp" 
 			android:layout_marginLeft="5dp"/>
         
     </LinearLayout>
-    
-   	<!-- <Spinner
-        android:id="@+id/host_fragment_networks"
-        android:layout_width="fill_parent"
-        android:layout_height="50dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="5dp"/> -->
 
-   	
    	<com.ibus.autowol.ui.DeviceListView 
-   	    android:id="@+id/host_list"
+   	    android:id="@+id/local_network_fragment_device_list"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
@@ -41,17 +34,6 @@
         android:layout_marginTop="5dp">
    	</com.ibus.autowol.ui.DeviceListView>
    	
-   	
-    
-     <!-- <ListView
-        android:id="@+id/host_list"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-         android:layout_marginRight="5dp"
-         android:layout_marginTop="5dp">
-    </ListView> -->
 
-     
 
 </LinearLayout>

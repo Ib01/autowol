@@ -46,10 +46,10 @@ public class NavigationSpinnerAdapter extends BaseAdapter implements SpinnerAdap
 		
         if (view == null)
         {
-        	view= _activity.getLayoutInflater().inflate(R.layout.activity_list_item, null); 
+        	view= _activity.getLayoutInflater().inflate(R.layout.navigation_list_item_layout, null); 
         }
         
-        TextView tv=(TextView)view.findViewById(R.id.activity_list_item_description);
+        TextView tv=(TextView)view.findViewById(R.id.navigation_list_item_description);
         tv.setText(_items.get(position).Title);
  
         return view; 
@@ -63,10 +63,10 @@ public class NavigationSpinnerAdapter extends BaseAdapter implements SpinnerAdap
 		
         if (view == null)
         {
-        	view= _activity.getLayoutInflater().inflate(R.layout.activity_list_item, null); 
+        	view= _activity.getLayoutInflater().inflate(R.layout.navigation_list_item_layout, null); 
         }
         
-        TextView tv=(TextView)view.findViewById(R.id.activity_list_item_description);
+        TextView tv=(TextView)view.findViewById(R.id.navigation_list_item_description);
         tv.setText(_items.get(position).Title);
  
         return view; 

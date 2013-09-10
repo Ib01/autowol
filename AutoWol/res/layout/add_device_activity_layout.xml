@@ -10,7 +10,7 @@
   	</TextView>
     
     <EditText
-        android:id="@+id/add_schedule_activity_host_name"
+        android:id="@+id/add_device_activity_host_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     </EditText>
@@ -22,7 +22,7 @@
   	</TextView>
     
     <EditText
-        android:id="@+id/add_schedule_activity_ip_address"
+        android:id="@+id/add_device_activity_ip_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     </EditText>
@@ -33,25 +33,11 @@
   	</TextView>
   	
     <EditText
-        android:id="@+id/add_schedule_activity_mac_address"
+        android:id="@+id/add_device_activity_mac_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     </EditText>
     
-    <Button
-        android:id="@+id/add_schedule_activity_add"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button" />
-    
-    
-    
-    <Button
-	    android:id="@+id/add_device_activity_add"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:text="Button" />
-
-
+   
 </LinearLayout>
 

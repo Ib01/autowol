@@ -54,7 +54,7 @@ public class NetworkSpinnerAdapter extends BaseAdapter implements SpinnerAdapter
 		
         if (view == null)
         {
-        	view= _inflater.inflate(R.layout.network_list_item, null); 
+        	view= _inflater.inflate(R.layout.network_list_item_layout, null); 
         }
         
         TextView n=(TextView)view.findViewById(R.id.network_list_item_name);

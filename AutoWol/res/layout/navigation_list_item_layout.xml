@@ -11,7 +11,7 @@
     	android:src="@drawable/delete"></ImageView>
      -->
     
-    <TextView android:id="@+id/activity_list_item_description" 
+    <TextView android:id="@+id/navigation_list_item_description" 
 	        android:layout_width="wrap_content"
 	    	android:layout_height="wrap_content"
 	    	android:textColor="@color/awol_white"
@@ -20,7 +20,5 @@
 	    	android:layout_marginLeft="5dp"
 	    	android:layout_marginTop="5dp"
 	    	android:layout_marginBottom="5dp"></TextView>
-    
-    
 
 </LinearLayout>

@@ -11,7 +11,7 @@
     >
     
     <ImageView
-        android:id="@+id/host_list_item_device_image" 
+        android:id="@+id/device_list_item_device_image" 
         android:src="@drawable/ic_pc_dissabled"
     android:layout_width="wrap_content"
 	android:layout_height="wrap_content" />
@@ -22,12 +22,12 @@
     android:orientation="vertical"
     android:layout_marginLeft="5dp">
     
-    		<TextView android:id="@+id/host_list_item_ip_address"
+    		<TextView android:id="@+id/device_list_item_ip_address"
 		        android:layout_width="wrap_content"
 		    	android:layout_height="wrap_content"
 		    	android:textColor="@color/dissabled_text" />
     		  
-    		  <TextView android:id="@+id/host_list_item_mac_address" 
+    		  <TextView android:id="@+id/device_list_item_mac_address" 
 		        android:layout_width="wrap_content"
 		    	android:layout_height="wrap_content"
 		    	android:textColor="@color/dissabled_text" />    
@@ -38,7 +38,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
     
-    		<TextView android:id="@+id/host_list_item_pc_name"
+    		<TextView android:id="@+id/device_list_item_pc_name"
 		        android:layout_width="wrap_content"
 		    	android:layout_height="wrap_content" 
 		    	android:layout_gravity="right"

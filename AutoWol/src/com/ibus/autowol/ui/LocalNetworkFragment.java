@@ -34,7 +34,7 @@ import com.ibus.autowol.backend.Router;
 import com.ibus.autowol.backend.ThreadResult;
 import com.ibus.autowol.backend.WolSender;
 
-public class DevicesListFragment extends SherlockFragment 
+public class LocalNetworkFragment extends SherlockFragment 
 implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, OnPingProgressListener, OnPingCompleteListener
 {
 	private final static String TAG = "AutoWol-DevicesListFragment";
@@ -64,7 +64,7 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
         _pinger.addOnPingCompleteListener(this);
         _pinger.addOnPingProgressListener(this);
 		
-        View v = inflater.inflate(R.layout.host_fragment, container, false);
+        View v = inflater.inflate(R.layout.local_network_fragment_layout, container, false);
         return v; 
     }
 	
@@ -74,7 +74,7 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 		Log.i(TAG, "DevicesListFragment.onActivityCreated is executing");
 		super.onActivityCreated(savedInstanceState);
 		
-		_deviceListView = (DeviceListView) getActivity().findViewById(R.id.host_list);
+		_deviceListView = (DeviceListView) getActivity().findViewById(R.id.local_network_fragment_device_list);
 		_deviceListView.setOnItemClickListener(new DeviceListClickListener()); 
 		
 		Router r = _network.getRouter();
@@ -198,6 +198,16 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 	// Utilities //////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	public Device getDevice(int devicePk) 
+	{
+		Database database = new Database(getActivity());
+		database.open();
+		Device d = database.getDevice(devicePk);
+		database.close();
+		
+		return d;
+	}
+	
 	
 	public void saveDevice(Device device) 
 	{
@@ -244,7 +254,7 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 	
 	public void setNetworkHeader(Router router)
 	{
-		TextView network = (TextView) getActivity().findViewById(R.id.host_fragment_networks);
+		TextView network = (TextView) getActivity().findViewById(R.id.local_network_fragment_network);
 		
 		if(_network.isWifiConnected(getActivity()))
 		{
@@ -276,7 +286,7 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 	{
 		public DeviceListClickListener() 
 		{
-			super((SherlockFragmentActivity)getActivity(), R.menu.device_list_context_menu);
+			super((SherlockFragmentActivity)getActivity(), R.menu.local_network_fragment_context_menu);
 		}
 
 		@Override
@@ -285,6 +295,7 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 			if(item.getItemId() == R.id.device_list_context_menu_delete)
 			{
 	            	mode.finish();
+	            	
 	                return false;
 			}
 			else if(item.getItemId() == R.id.device_list_context_menu_wake)
@@ -292,10 +303,12 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 				List<Device> dl = getSelectedItems();
 				Device[] da = dl.toArray(new Device[dl.size()]);
 				
-				//TODO: should be logging and throwing hewre
+				//TODO: should be logging and throwing here?
 				WolSender sender;
 				try {
 					sender = new WolSender(_network.getBroadcastAddress());
+					
+					//TODO: should be passing a copy of the devices array!! this is not thread safe
 					sender.execute(da);
 				} catch (IOException e) {
 
@@ -310,9 +323,10 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 
 
 	//called after AddDeviceActivity has completed successfully
-	public void addDevice(String string) 
+	public void addDevice(int devicePk) 
 	{
-		
+		Device d = getDevice(devicePk);
+		_deviceListView.addDevice(d);
 	}
 	
 	

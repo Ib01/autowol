@@ -117,92 +117,6 @@ public class PersistantPinger implements Runnable, IPinger
 	}	
 	
 	
-	
-	
-	/*@Override
-	public void run() 
-	{
-
-		Log.i(TAG, "PersistantPinger Thread entered ....");
-		
-
-		while (getContinue()) 
-		{
-			ExecutorService executor = Executors.newFixedThreadPool(5);
-			List<Future<ThreadResult>> list = new ArrayList<Future<ThreadResult>>();
-
-			List<Device> dl = getDevices();
-
-			for (Device d : dl) 
-			{
-				Callable<ThreadResult> worker = new HostEnumerationCallable(d);
-				Future<ThreadResult> submit = executor.submit(worker);
-				list.add(submit);
-			}
-
-			// Now retrieve the result
-			for (Future<ThreadResult> future : list) 
-			{
-				try 
-				{
-					ThreadResult res = future.get();
-					Log.i(TAG, "Completed pinging " + res.device.getIpAddress());
-					
-					Message msg = _messageHandler.obtainMessage(UPDATE_PROGRESS, res);
-					_messageHandler.sendMessage(msg);					
-					
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				} catch (ExecutionException e) {
-					e.printStackTrace();
-				}
-			}
-
-			executor.shutdown();
-
-			try 
-			{
-				Log.i(TAG, "PersistantPinger Thread is sleeping for 5 seconds");
-				Thread.sleep(5000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
-		Log.i(TAG, "exiting PersistantPinger thread");
-	}
-	*/
-	
-	/*public class HostEnumerationCallable implements Callable<ThreadResult> 
-	{
-		Device _device;
-		
-		public HostEnumerationCallable(Device device)
-		{
-			_device = device.getCopy();
-		}
-		
-		@Override
-		public ThreadResult call() throws Exception 
-		{
-			ThreadResult result = new ThreadResult(_device);
-			
-			result.success = InetAddressManager.ping(_device.getIpAddress(), 300);
-			if(!result.success)
-			{
-				result.success = Shell.ping(_device.getIpAddress());	
-			}
-			
-			return result;
-		}
-	
-	}*/
-	
-	
-	
-	
-	
 	@Override
 	public void start(List<Device> devices) 
 	{
@@ -226,6 +140,9 @@ public class PersistantPinger implements Runnable, IPinger
 	
 	private List<Device> getDevices()
 	{
+		//TODO: I DONT THING THINK THIS IS SAFE. IF ANOTHER OBJECT ACCES THE LIST 
+		//WITHOUT CALLING ONE OF THE FUNCTIONS IN THIS OBJECT IT WILL BE ABLE TO ACCESS BECAUSE IT 
+		//WILL NOT BE CHECKING THE LOCK ON THIS
 		synchronized (this)
 		{
 			List<Device> dl = new ArrayList<Device>();
@@ -238,6 +155,7 @@ public class PersistantPinger implements Runnable, IPinger
 	
 	public void setDevices(List<Device> devices)
 	{
+
 		synchronized (this)
 		{
 			_devices = devices;

@@ -50,7 +50,7 @@ public class DeviceListView extends ListView
 	public void init() {
 		setChoiceMode(DeviceListView.CHOICE_MODE_SINGLE);
 		_deviceListadapter = new HostListAdapter(getContext(),
-				R.id.host_list_item_ip_address, new ArrayList<Device>());
+				R.id.device_list_item_ip_address, new ArrayList<Device>());
 		setAdapter(_deviceListadapter);
 	}
 
@@ -237,13 +237,13 @@ public class DeviceListView extends ListView
 	
 	private void setViewOff(View v) 
 	{
-		TextView ip = (TextView) v.findViewById(R.id.host_list_item_ip_address);
+		TextView ip = (TextView) v.findViewById(R.id.device_list_item_ip_address);
 		TextView mac = (TextView) v
-				.findViewById(R.id.host_list_item_mac_address);
+				.findViewById(R.id.device_list_item_mac_address);
 		TextView pcName = (TextView) v
-				.findViewById(R.id.host_list_item_pc_name);
+				.findViewById(R.id.device_list_item_pc_name);
 		ImageView img = (ImageView) v
-				.findViewById(R.id.host_list_item_device_image);
+				.findViewById(R.id.device_list_item_device_image);
 
 		img.setImageDrawable(getContext().getResources().getDrawable(
 				R.drawable.ic_pc_dissabled));
@@ -257,13 +257,13 @@ public class DeviceListView extends ListView
 
 	private void setViewOn(View v) 
 	{
-		TextView ip = (TextView) v.findViewById(R.id.host_list_item_ip_address);
+		TextView ip = (TextView) v.findViewById(R.id.device_list_item_ip_address);
 		TextView mac = (TextView) v
-				.findViewById(R.id.host_list_item_mac_address);
+				.findViewById(R.id.device_list_item_mac_address);
 		TextView pcName = (TextView) v
-				.findViewById(R.id.host_list_item_pc_name);
+				.findViewById(R.id.device_list_item_pc_name);
 		ImageView img = (ImageView) v
-				.findViewById(R.id.host_list_item_device_image);
+				.findViewById(R.id.device_list_item_device_image);
 
 		img.setImageDrawable(getContext().getResources().getDrawable(
 				R.drawable.ic_pc));
@@ -292,7 +292,7 @@ public class DeviceListView extends ListView
 			// first check to see if the view is null. if so, we have to inflate it.
 			if (v == null) {
 				LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				v = inflater.inflate(R.layout.host_list_item, null);
+				v = inflater.inflate(R.layout.device_list_item_layout, null);
 			}
 
 			Device host = _devices.get(position); 
@@ -300,9 +300,9 @@ public class DeviceListView extends ListView
 			if (host != null) 
 			{
 				//ImageView img = (ImageView) v.findViewById(R.id.host_list_item_device_image);
-				TextView ip = (TextView) v.findViewById(R.id.host_list_item_ip_address);
-				TextView mac = (TextView) v.findViewById(R.id.host_list_item_mac_address);
-				TextView pcName = (TextView) v.findViewById(R.id.host_list_item_pc_name);
+				TextView ip = (TextView) v.findViewById(R.id.device_list_item_ip_address);
+				TextView mac = (TextView) v.findViewById(R.id.device_list_item_mac_address);
+				TextView pcName = (TextView) v.findViewById(R.id.device_list_item_pc_name);
 
 				ip.setText(host.getIpAddress());
 				mac.setText(host.getMacAddress());

@@ -14,7 +14,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.ibus.autowol.ui.ActivityListItem;
 import com.ibus.autowol.ui.AddDeviceActivity;
 import com.ibus.autowol.ui.AddScheduleActivity;
-import com.ibus.autowol.ui.DevicesListFragment;
+import com.ibus.autowol.ui.LocalNetworkFragment;
 import com.ibus.autowol.ui.NavigationSpinnerAdapter;
 import com.ibus.autowol.ui.OnScanStartListener;
 import com.ibus.autowol.ui.SchedulesListFragment;
@@ -33,9 +33,9 @@ public class MainActivity extends SherlockFragmentActivity
     public void onCreate(Bundle savedInstanceState) 
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.main_activity_layout);
 
-        _optionsMenu = R.menu.devices_list_fragment_menu;
+        _optionsMenu = R.menu.main_activity_options_menu;
         
         InitialiseActionBar();
         _scanStartListeners = new ArrayList<OnScanStartListener>();
@@ -154,11 +154,11 @@ public class MainActivity extends SherlockFragmentActivity
 			case AddDeviceActivityRequest:
 				if (resultCode == RESULT_OK) 
 				{
-					/*int pk = data.getIntExtra("DeviceId", -1);
+					int pk = data.getIntExtra("DeviceId", -1);
 					if(pk != -1)
 					{
-						_actionBarNavigationListener.getDevicesListFragment().addDevice(pk);
-					}*/
+						_actionBarNavigationListener.getLocalNetworkFragment().addDevice(pk);
+					}
 					//TODO: else???
 				}
 				break;
@@ -198,7 +198,7 @@ public class MainActivity extends SherlockFragmentActivity
 	
 	public class ActionBarNavigationListener implements ActionBar.OnNavigationListener
 	{
-		private DevicesListFragment _devicesListFragment;
+		private LocalNetworkFragment _localNetworkFragment;
 		private SchedulesListFragment _schedulesListFragment;
 		
 		
@@ -212,22 +212,22 @@ public class MainActivity extends SherlockFragmentActivity
 		{
 			if(position == 0)
 			{
-				_optionsMenu = R.menu.devices_list_fragment_menu;
+				_optionsMenu = R.menu.main_activity_options_menu;
 				MainActivity.this.invalidateOptionsMenu();
-				return displayDevicesFragment();
+				return displayLocalNetworkFragment();
 			}
 			else
 			{
-				_optionsMenu = R.menu.schedules_list_fragment_menu;
+				_optionsMenu = R.menu.schedules_list_fragment_options_menu;
 				MainActivity.this.invalidateOptionsMenu();
 				return displaySchedulesListFragment();
 			}
 		}
 		
 		
-		private boolean displayDevicesFragment()
+		private boolean displayLocalNetworkFragment()
 		{
-			DevicesListFragment devicesListFragment = getDevicesListFragment();
+			LocalNetworkFragment devicesListFragment = getLocalNetworkFragment();
 			
 			FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 			ft.replace(android.R.id.content, devicesListFragment);
@@ -247,15 +247,15 @@ public class MainActivity extends SherlockFragmentActivity
 			return true;  
 		}
 
-		public DevicesListFragment getDevicesListFragment()
+		public LocalNetworkFragment getLocalNetworkFragment()
 		{
-			if(_devicesListFragment == null)
+			if(_localNetworkFragment == null)
 			{
-				_devicesListFragment = (DevicesListFragment)SherlockFragment.instantiate(MainActivity.this, DevicesListFragment.class.getName()); 
-				addScanStartListener(_devicesListFragment);
+				_localNetworkFragment = (LocalNetworkFragment)SherlockFragment.instantiate(MainActivity.this, LocalNetworkFragment.class.getName()); 
+				addScanStartListener(_localNetworkFragment);
 			}
 			
-			return _devicesListFragment;
+			return _localNetworkFragment;
 		}
 		
 		

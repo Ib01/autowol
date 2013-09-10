@@ -24,7 +24,7 @@ public class AddDeviceActivity extends SherlockActivity
     public void onCreate(Bundle savedInstanceState) 
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.add_device_activity);
+        setContentView(R.layout.add_device_activity_layout);
 
         _network = Factory.getNetwork(this);
 		
@@ -36,7 +36,7 @@ public class AddDeviceActivity extends SherlockActivity
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) 
     {
-    	getSupportMenuInflater().inflate(R.menu.dialog_activity_menu, menu);    	
+    	getSupportMenuInflater().inflate(R.menu.dialog_activity_options_menu, menu);    	
         return true;   
     }
 	
@@ -48,10 +48,10 @@ public class AddDeviceActivity extends SherlockActivity
         switch (item.getItemId()) 
         { 
             case R.id.dialog_activity_add:
-            	/*int pk = SaveDevice();
+            	int pk = SaveDevice();
             	Intent newIntent= new Intent();
         		newIntent.putExtra("DeviceId", pk);
-        		setResult(RESULT_OK, newIntent);*/
+        		setResult(RESULT_OK, newIntent);
         		finish();
             	break;
             default:
@@ -65,7 +65,7 @@ public class AddDeviceActivity extends SherlockActivity
 	
 	 //TODO: LAYOUT NEEDS SORTING OUT
 	
-	/*private int SaveDevice()
+	private int SaveDevice()
 	{
 		Database database = new Database(this);
 		database.open();
@@ -85,7 +85,7 @@ public class AddDeviceActivity extends SherlockActivity
 		
 		database.close();
 		return pk;
-	}*/
+	}
 	 	
 }
 

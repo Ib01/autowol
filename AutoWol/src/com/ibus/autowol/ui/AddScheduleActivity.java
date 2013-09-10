@@ -28,7 +28,7 @@ public class AddScheduleActivity extends SherlockActivity
     public void onCreate(Bundle savedInstanceState) 
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.add_schedule_activity);
+        setContentView(R.layout.add_schedule_activity_layout);
         
         _network = Factory.getNetwork(this);
 		
@@ -40,7 +40,7 @@ public class AddScheduleActivity extends SherlockActivity
 	@Override
    public boolean onCreateOptionsMenu(Menu menu) 
    {
-   	getSupportMenuInflater().inflate(R.menu.dialog_activity_menu, menu);    	
+   	getSupportMenuInflater().inflate(R.menu.dialog_activity_options_menu, menu);    	
        return true;   
    }
 	

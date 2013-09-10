@@ -11,5 +11,5 @@
         android:title="@string/add_host_button_title"
         android:showAsAction="always"
         android:icon="@drawable/ic_action_add"></item>
-    
+     
 </menu>
