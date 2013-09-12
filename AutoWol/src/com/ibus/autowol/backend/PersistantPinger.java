@@ -145,7 +145,7 @@ public class PersistantPinger implements Runnable, IPinger
 		//WILL NOT BE CHECKING THE LOCK ON THIS
 		synchronized (this)
 		{
-			List<Device> dl = new ArrayList<Device>();
+			List<Device> dl = new ArrayList<Device>(); 
 			for(Device d : _devices)
 				dl.add(d.getCopy());
 			
