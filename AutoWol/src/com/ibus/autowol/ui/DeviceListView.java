@@ -20,16 +20,7 @@ public class DeviceListView extends ListView
 {
 	HostListAdapter _deviceListadapter;
 	private List<Device> _devices;
-	//private String _routerBssid = "";
-
-/*	public String getRouterBssid() {
-		return _routerBssid;
-	}
-
-	public void setRouterBssid(String _routerBssid) {
-		this._routerBssid = _routerBssid;
-	}*/
-
+	
 	public DeviceListView(Context context) {
 		super(context);
 		init();
@@ -60,22 +51,6 @@ public class DeviceListView extends ListView
 		_deviceListadapter.notifyDataSetChanged();
 	}
 	
-	/*public void setDevices(List<Device> devices, List<String> macAddresses) {
-		_deviceListadapter.clear();
-		_deviceListadapter.addAll(devices);
-		setLiveDevices(macAddresses);
-		_deviceListadapter.notifyDataSetChanged();
-	}
-	*/
-
-	//this status will be picked up when the view is created in our adapter
-	/*public void setLiveDevices(List<String> macAddresses)
-	{
-		for(String m : macAddresses)
-		{
-			setDeviceLive(m);
-		}
-	}*/
 	
 	public Device setDeviceLive(String macAddresses, boolean isLive)
 	{
@@ -121,44 +96,6 @@ public class DeviceListView extends ListView
 		return dl;
 	}
 	
-	
-	
-	
-	/*//only usefull if the device is in the list which it wont be 
-	//if we call this straight after adding it  
-	public void showDeviceOn(Device device) 
-	{
-		for (int i = 0; i < this.getChildCount(); ++i) 
-		{
-			View v = this.getChildAt(i);
-			Device dev = (Device) v.getTag();
-			
-			if (dev.getMacAddress().equals(device.getMacAddress())) 
-			{
-				setViewOn(v);
-				dev.setIsLive(true);
-			}
-		}
-	}
-
-	//only usefull if the device is in the list which it wont be 
-	//if we call this straight after adding it
-	public void showDeviceOff(Device device) 
-	{
-		for (int i = 0; i < this.getChildCount(); ++i) 
-		{
-			View v = this.getChildAt(i);
-			Device dev = (Device) v.getTag();
-			
-			if (dev.getMacAddress().equals(device.getMacAddress())) 
-			{
-				setViewOff(v);
-				dev.setIsLive(false);
-			}
-		}
-	}
-
-	}*/
 
 	public List<Device> GetItems()
 	{
@@ -192,20 +129,6 @@ public class DeviceListView extends ListView
 	}
 	
 	
-	/*public void addDevice(Device device)
-	{
-		_deviceListadapter.add(device);
-		_deviceListadapter.notifyDataSetChanged();
-	}
-	
-	public void updateDevice(Device device)
-	{
-		Device d = GetDeviceForMac(device.getMacAddress());
-		d.copyFromScannedDevice(device);
-		_deviceListadapter.notifyDataSetChanged();
-	}
-	*/
-	
 	public void addDevice(Device device)
 	{
 		if(!isInList(device.getMacAddress()))
@@ -220,6 +143,16 @@ public class DeviceListView extends ListView
 		_deviceListadapter.notifyDataSetChanged();
 	}
 	
+	public void removeDevices(List<Device> devices)
+	{
+		for(Device d : devices)
+		{
+			_deviceListadapter.remove(d);	
+		}
+		
+		_deviceListadapter.notifyDataSetChanged();
+	}
+
 	
 	
 	// /////////////////////////////////////////////////////////////////////////////////////////////////

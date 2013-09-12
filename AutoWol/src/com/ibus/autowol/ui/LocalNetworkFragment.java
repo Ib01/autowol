@@ -198,6 +198,15 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 	// Utilities //////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	public void deleteDevices(List<Device> devices) 
+	{
+		Database database = new Database(getActivity());
+		database.open();
+		database.deleteDevices(devices);
+		database.close();
+	}
+	
+	
 	public Device getDevice(int devicePk) 
 	{
 		Database database = new Database(getActivity());
@@ -294,9 +303,13 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 		{
 			if(item.getItemId() == R.id.device_list_context_menu_delete)
 			{
-	            	mode.finish();
-	            	
-	                return false;
+            	List<Device> dl = getSelectedItems();
+            	_deviceListView.removeDevices(dl);
+            	deleteDevices(dl);
+            	
+            	mode.finish();
+            	
+                return false;
 			}
 			else if(item.getItemId() == R.id.device_list_context_menu_wake)
 			{
