@@ -69,13 +69,15 @@ public class DeviceListView extends ListView
 		return ret;
 	}
 	
+	//
 	private void refreshViewStyle(String macAddresses) 
 	{
 		for (int i = 0; i < this.getChildCount(); ++i) 
 		{
 			View v = this.getChildAt(i);
 			Device dev = (Device) v.getTag();
-			
+		
+			//TODO: INSTEAd of calling setViewstle call _deviceListadapter.notifyDataSetChanged();??
 			if (dev.getMacAddress().equals(macAddresses)) 
 				setViewStyle(v);
 		}
@@ -97,7 +99,7 @@ public class DeviceListView extends ListView
 	}
 	
 
-	public List<Device> GetItems()
+	public List<Device> getDevices()
 	{
 		return _devices;
 	}
@@ -122,7 +124,7 @@ public class DeviceListView extends ListView
 		return null;
 	}
 	
-	public boolean isInList(String deviceMac)
+	public boolean deviceIsInList(String deviceMac)
 	{
 		Device d = GetDeviceForMac(deviceMac);
 		return (d != null);
@@ -131,7 +133,7 @@ public class DeviceListView extends ListView
 	
 	public void addDevice(Device device)
 	{
-		if(!isInList(device.getMacAddress()))
+		if(!deviceIsInList(device.getMacAddress()))
 		{
 			_deviceListadapter.add(device);
 		}
@@ -153,7 +155,6 @@ public class DeviceListView extends ListView
 		_deviceListadapter.notifyDataSetChanged();
 	}
 
-	
 	
 	// /////////////////////////////////////////////////////////////////////////////////////////////////
 	// Utilities

@@ -1,5 +1,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     
+    <item android:id="@+id/device_list_context_menu_edit"
+        android:title="@string/edit_device_button_title"
+        android:showAsAction="ifRoom"
+        android:icon="@drawable/ic_edit"></item>
+    
     <item android:id="@+id/device_list_context_menu_delete"
         android:title="@string/delete_host_button_title"
         android:showAsAction="ifRoom"

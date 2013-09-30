@@ -46,5 +46,9 @@ public class Factory
 	{
 		return new PersistantPinger();
 	}
-	  
+
+	public static IWolSender getWolSender(String broadcastAddress)
+	{
+		return new WolSender(broadcastAddress);
+	}
 }

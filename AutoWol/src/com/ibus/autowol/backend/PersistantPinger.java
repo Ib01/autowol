@@ -98,6 +98,7 @@ public class PersistantPinger implements Runnable, IPinger
 				if(!s)
 					s = Shell.ping(d.getIpAddress());	
 				
+				d.setIsLive(s);
 				Message msg = _messageHandler.obtainMessage(UPDATE_PROGRESS, new ThreadResult(d, s));
 				_messageHandler.sendMessage(msg);	
 			}
@@ -138,28 +139,14 @@ public class PersistantPinger implements Runnable, IPinger
 	}
 	
 	
-	private List<Device> getDevices()
+	private synchronized List<Device> getDevices()
 	{
-		//TODO: I DONT THING THINK THIS IS SAFE. IF ANOTHER OBJECT ACCES THE LIST 
-		//WITHOUT CALLING ONE OF THE FUNCTIONS IN THIS OBJECT IT WILL BE ABLE TO ACCESS BECAUSE IT 
-		//WILL NOT BE CHECKING THE LOCK ON THIS
-		synchronized (this)
-		{
-			List<Device> dl = new ArrayList<Device>(); 
-			for(Device d : _devices)
-				dl.add(d.getCopy());
-			
-			return dl;
-		}
+		return _devices;
 	}
 	
-	public void setDevices(List<Device> devices)
+	public synchronized void setDevices(List<Device> devices)
 	{
-
-		synchronized (this)
-		{
 			_devices = devices;
-		}
 	}
 	
 	private boolean getContinue()

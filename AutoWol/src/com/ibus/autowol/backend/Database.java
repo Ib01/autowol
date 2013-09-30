@@ -251,7 +251,7 @@ public class Database {
 		  return (int)db.insert(TABLE_DEVICE, null, contentValues);
 	  }
 	  
-	  public int updateDevice(Device device)
+	  public int updateDeviceForMac(Device device)
 	  {
 		  ContentValues cv = getDeviceContentValues(device);
 		  
@@ -259,8 +259,16 @@ public class Database {
 		  return (int)db.update(TABLE_DEVICE, cv, COLUMN_DEVICE_MAC + "=?", params);
 	  }
 	  
+	  public int updateDevice(Device device)
+	  {
+		  ContentValues cv = getDeviceContentValues(device);
+		  
+		  String[] params = {((Integer)device.getPrimaryKey()).toString()};  
+		  return (int)db.update(TABLE_DEVICE, cv, COLUMN_DEVICE_DEVICE_ID + "=?", params);
+	  }
 	  
-	  public int saveDevice(Device device, int routerPk)
+	  
+	  public int saveDeviceForMac(Device device, int routerPk)
 	  {
 		  Device d = getDeviceForMac(device.getMacAddress());
 		  if(d == null)
@@ -271,7 +279,7 @@ public class Database {
 		  {
 			  //TODO: why would device not already have a routerPK?
 			  device.setRouterId(routerPk);
-			  return updateDevice(device);
+			  return updateDeviceForMac(device);
 		  }
 	  }
 	  
@@ -345,8 +353,27 @@ public class Database {
 		  //any attached actions and plugins
 		  return db.delete(TABLE_DEVICE, COLUMN_DEVICE_DEVICE_ID + "=?" , params);
 	  }
+	  
+	  public int deleteDevicesForRouter(int routerId) 
+	  {
+		  String[] params = {((Integer)routerId).toString()};
+		  
+		  //delete operation useses cascade delete triggers so we don't have 
+		  //to do anything other than delete the location. this will also delete 
+		  //any attached actions and plugins
+		  return db.delete(TABLE_DEVICE, COLUMN_DEVICE_ROUTER_ID + "=?" , params);
+	  }
+
+	  public void saveDevicesForRouter(List<Device> devices, int routerId) 
+	  {
+		  for(Device d : devices)
+		  {
+			  saveDeviceForMac(d, routerId);
+		  }
+	  }
+	  
 	   
-	  public int saveRouter(Router router)
+	  public int saveRouterForBssid(Router router)
 	  {
 		  Router r = getRouterForBssid(router.getBssid());
 		  if(r == null)
@@ -355,7 +382,7 @@ public class Database {
 		  }
 		  else
 		  {
-			  return updateRouter(router);
+			  return updateRouterForBssid(router);
 		  }
 	  }
 	  
@@ -365,7 +392,7 @@ public class Database {
 		  return (int)db.insert(TABLE_ROUTER, null, cv);
 	  }
 	  
-	  public int updateRouter(Router router)
+	  public int updateRouterForBssid(Router router)
 	  {
 		  ContentValues cv = getRouterContentValues(router);
 		  
@@ -430,23 +457,7 @@ public class Database {
 		  return null;
 	  }
 	  
-	  public int deleteDevicesForRouter(int routerId) 
-	  {
-		  String[] params = {((Integer)routerId).toString()};
-		  
-		  //delete operation useses cascade delete triggers so we don't have 
-		  //to do anything other than delete the location. this will also delete 
-		  //any attached actions and plugins
-		  return db.delete(TABLE_DEVICE, COLUMN_DEVICE_ROUTER_ID + "=?" , params);
-	  }
-
-	  public void saveDevicesForRouter(List<Device> devices, int routerId) 
-	  {
-		  for(Device d : devices)
-		  {
-			  saveDevice(d, routerId);
-		  }
-	  }
+	 
 	  
 	  
 	  

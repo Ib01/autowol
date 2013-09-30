@@ -11,7 +11,6 @@ public interface IPinger
 	public void stop();
 	public void addOnPingCompleteListener(OnPingCompleteListener listener);
 	public void addOnPingProgressListener(OnPingProgressListener listener);
-
-
+	public void setDevices(List<Device> devices);
 	
 }

@@ -19,6 +19,7 @@ import com.ibus.autowol.backend.Router;
 public class AddDeviceActivity extends SherlockActivity 
 {
 	INetwork _network;
+	int devicePk = -1;
 	
 	 @Override
     public void onCreate(Bundle savedInstanceState) 
@@ -30,6 +31,15 @@ public class AddDeviceActivity extends SherlockActivity
 		
 		ActionBar ab = getSupportActionBar();
 		ab.setDisplayHomeAsUpEnabled(true);
+		
+		
+		Bundle bundle=this.getIntent().getExtras();
+		
+		if(bundle != null && bundle.containsKey("DeviceId")){
+			devicePk=bundle.getInt("DeviceId");
+			Device d = getDevice(devicePk);
+			populateForm(d);
+		}
     }
 
 	
@@ -48,11 +58,14 @@ public class AddDeviceActivity extends SherlockActivity
         switch (item.getItemId()) 
         { 
             case R.id.dialog_activity_add:
-            	int pk = SaveDevice();
-            	Intent newIntent= new Intent();
-        		newIntent.putExtra("DeviceId", pk);
-        		setResult(RESULT_OK, newIntent);
-        		finish();
+            	if(formIsValid())
+            	{
+	            	int pk = SaveDevice();
+	            	Intent newIntent= new Intent();
+	        		newIntent.putExtra("DeviceId", pk);
+	        		setResult(RESULT_OK, newIntent);
+	        		finish();
+            	}
             	break;
             default:
         		setResult(RESULT_CANCELED);
@@ -63,8 +76,23 @@ public class AddDeviceActivity extends SherlockActivity
         return true;
     }    
 	
-	 //TODO: LAYOUT NEEDS SORTING OUT
 	
+	public boolean formIsValid()
+	{
+		EditText name = (EditText) findViewById(R.id.add_device_activity_host_name);
+		EditText ip = (EditText) findViewById(R.id.add_device_activity_ip_address);
+		EditText mac = (EditText) findViewById(R.id.add_device_activity_mac_address);
+		
+		boolean ret = (!name.getText().toString().trim().equals("") &&
+				!ip.getText().toString().trim().equals("") &&
+				!mac.getText().toString().trim().equals(""));
+		
+		return ret;
+	}
+	
+	
+	
+	 //TODO: LAYOUT NEEDS SORTING OUT
 	private int SaveDevice()
 	{
 		Database database = new Database(this);
@@ -74,18 +102,55 @@ public class AddDeviceActivity extends SherlockActivity
 		EditText ip = (EditText) findViewById(R.id.add_device_activity_ip_address);
 		EditText mac = (EditText) findViewById(R.id.add_device_activity_mac_address);
 		
+		int pk;
 		Device d = new Device();
-		d.setName(name.getText().toString().trim());
-		d.setIpAddress(ip.getText().toString().trim());
-		d.setMacAddress(mac.getText().toString().trim());
-		
-		Router router = _network.getRouter();
-		
-		int pk = database.addDevice(d, router.getBssid());
+		if(devicePk != -1)
+		{
+			d = database.getDevice(devicePk);
+			
+			d.setName(name.getText().toString().trim());
+			d.setIpAddress(ip.getText().toString().trim());
+			d.setMacAddress(mac.getText().toString().trim());
+			
+			database.updateDevice(d);
+			pk = d.getPrimaryKey();
+		}
+		else
+		{
+			d.setName(name.getText().toString().trim());
+			d.setIpAddress(ip.getText().toString().trim());
+			d.setMacAddress(mac.getText().toString().trim());
+			
+			Router router = _network.getRouter();
+			pk = database.addDevice(d, router.getBssid());
+		}
 		
 		database.close();
 		return pk;
 	}
+	
+	
+	public Device getDevice(int devicePk)
+	{
+		Database database = new Database(this);
+		database.open();
+		Device d = database.getDevice(devicePk);
+		database.close();
+		
+		return d;
+	}
+	
+	public void populateForm(Device device)
+	{
+		EditText name = (EditText) findViewById(R.id.add_device_activity_host_name);
+		EditText ip = (EditText) findViewById(R.id.add_device_activity_ip_address);
+		EditText mac = (EditText) findViewById(R.id.add_device_activity_mac_address);
+		
+		name.setText(device.getName());
+		ip.setText(device.getIpAddress());
+		mac.setText(device.getMacAddress());
+	}
+	
 	 	
 }
 

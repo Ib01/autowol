@@ -23,6 +23,7 @@ public class MainActivity extends SherlockFragmentActivity
 {	
 	public static final int AddScheduleActivityRequest = 1;
 	public static final int AddDeviceActivityRequest = 2;
+	public static final int UpdateDeviceActivityRequest = 3;
 	private static final String TAG = "MainActivity";
 	private ActionBarNavigationListener _actionBarNavigationListener;
 	List<OnScanStartListener> _scanStartListeners; 
@@ -151,13 +152,14 @@ public class MainActivity extends SherlockFragmentActivity
 					_actionBarNavigationListener.getSchedulesListFragment().addSchedule("");					
 				}
 				break;
+			case UpdateDeviceActivityRequest:
 			case AddDeviceActivityRequest:
 				if (resultCode == RESULT_OK) 
 				{
 					int pk = data.getIntExtra("DeviceId", -1);
 					if(pk != -1)
 					{
-						_actionBarNavigationListener.getLocalNetworkFragment().addDevice(pk);
+						_actionBarNavigationListener.getLocalNetworkFragment().addOrUpdateDevice(pk);
 					}
 					//TODO: else???
 				}

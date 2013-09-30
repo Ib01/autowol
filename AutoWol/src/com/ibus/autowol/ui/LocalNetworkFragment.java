@@ -7,6 +7,7 @@ import java.util.List;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,6 +23,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.MenuItem;
+import com.ibus.autowol.MainActivity;
 import com.ibus.autowol.R;
 import com.ibus.autowol.backend.Database;
 import com.ibus.autowol.backend.Device;
@@ -29,6 +31,7 @@ import com.ibus.autowol.backend.Factory;
 import com.ibus.autowol.backend.IHostEnumerator;
 import com.ibus.autowol.backend.INetwork;
 import com.ibus.autowol.backend.IPinger;
+import com.ibus.autowol.backend.IWolSender;
 import com.ibus.autowol.backend.Network;
 import com.ibus.autowol.backend.Router;
 import com.ibus.autowol.backend.ThreadResult;
@@ -43,6 +46,7 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 	IPinger _pinger;
 	INetwork _network;
 	DeviceListView _deviceListView;
+	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
@@ -101,7 +105,7 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 		super.onResume();
 		
 		if(_network.isWifiConnected(getActivity()))
-			_pinger.start(_deviceListView.GetItems());
+			_pinger.start(getDevicesListCopy(_deviceListView.getDevices()));
 	
 		Log.i(TAG, "onResume");
 	}
@@ -121,18 +125,6 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 	public void onDestroy()
 	{
 		super.onDestroy();
-	}
-	
-	@Override
-	public void onAttach (Activity activity)
-	{
-		super.onAttach(activity);
-	}
-	
-	@Override
-	public void onDetach ()
-	{
-		super.onDetach();
 	}
 	
 	@Override
@@ -157,6 +149,7 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 		{
 			_deviceListView.addDevice(result.device);
 			saveDevice(result.device);
+			refreshPinger();
 		}
 	}
 	
@@ -223,7 +216,7 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 		Database database = new Database(getActivity());
 		database.open();
 		Router r = database.getRouterForBssid(_network.getRouter().getBssid());
-		database.saveDevice(device, r.getPrimaryKey());
+		database.saveDeviceForMac(device, r.getPrimaryKey());
 		database.close();
 	}
 	
@@ -234,7 +227,7 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 		{
 			Database database = new Database(getActivity());
 			database.open();
-			database.saveRouter(router);
+			database.saveRouterForBssid(router);
 			database.close();
 		}
 	}
@@ -301,11 +294,24 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 		@Override
 		public boolean actionItemClicked(ActionMode mode, MenuItem item) 
 		{
-			if(item.getItemId() == R.id.device_list_context_menu_delete)
+			if(item.getItemId() == R.id.device_list_context_menu_edit)
+			{
+				//TODO: WE ARE EDITING THE FIRST ITEM ONLY BUT THE USER CAN SELECT MULTIPLE ITEMS 
+				List<Device> dl = getSelectedItems();
+				int devId = dl.get(0).getPrimaryKey();
+				
+				Intent myIntent = new Intent();
+		        myIntent.setClass(getActivity(), AddDeviceActivity.class);
+		        myIntent.putExtra("DeviceId", devId);		        
+		        getActivity().startActivityForResult(myIntent, MainActivity.UpdateDeviceActivityRequest); 
+			}
+			else if(item.getItemId() == R.id.device_list_context_menu_delete)
 			{
             	List<Device> dl = getSelectedItems();
+            	
             	_deviceListView.removeDevices(dl);
             	deleteDevices(dl);
+            	refreshPinger();
             	
             	mode.finish();
             	
@@ -314,15 +320,10 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 			else if(item.getItemId() == R.id.device_list_context_menu_wake)
 			{
 				List<Device> dl = getSelectedItems();
-				Device[] da = dl.toArray(new Device[dl.size()]);
-				
-				//TODO: should be logging and throwing here?
-				WolSender sender;
-				try {
-					sender = new WolSender(_network.getBroadcastAddress());
-					
-					//TODO: should be passing a copy of the devices array!! this is not thread safe
-					sender.execute(da);
+				try 
+				{
+					IWolSender sender = Factory.getWolSender(_network.getBroadcastAddress());
+					sender.start(getDevicesListCopy(dl));
 				} catch (IOException e) {
 
 					Log.e(TAG, "could not get brodacast address for unknown reason", e);
@@ -333,13 +334,31 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 			return true;
 		}
 	}
+	
+	
 
 
 	//called after AddDeviceActivity has completed successfully
-	public void addDevice(int devicePk) 
+	public void addOrUpdateDevice(int devicePk) 
 	{
 		Device d = getDevice(devicePk);
 		_deviceListView.addDevice(d);
+		refreshPinger();
+	}
+	
+	public void refreshPinger()
+	{
+		_pinger.setDevices(getDevicesListCopy(_deviceListView.getDevices()));
+	}
+	
+	
+	public List<Device> getDevicesListCopy(List<Device> list)
+	{
+		List<Device> dl = new ArrayList<Device>(); 
+		for(Device d : list)
+			dl.add(d.getCopy());
+		
+		return dl;
 	}
 	
 	

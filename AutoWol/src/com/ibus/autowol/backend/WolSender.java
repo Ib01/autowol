@@ -11,7 +11,7 @@ import com.ibus.autowol.ui.OnWolSendProgressListener;
 
 
 //TODO: to do implement this as a runnable?
-public class WolSender extends AsyncTask<Device, Device, Void>  
+public class WolSender extends AsyncTask<Device, Device, Void>  implements IWolSender
 {
 	private final String TAG = "WolSender";
 	public final int PORT = 9; 
@@ -93,6 +93,13 @@ public class WolSender extends AsyncTask<Device, Device, Void>
 	public void addOnWolSendProgressListener(OnWolSendProgressListener listener) {
 		_wolSendProgressListeners.add(listener);
     }
+
+	@Override
+	public void start(List<Device> dl) 
+	{
+		Device[] da = dl.toArray(new Device[dl.size()]);
+		execute(da);
+	}
 	
 	
 }

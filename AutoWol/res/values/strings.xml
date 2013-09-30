@@ -5,6 +5,8 @@
     <string name="edit_message">Enter a message</string>
     <string name="button_send">Send</string>
 
+    
+    <string name="edit_device_button_title">Edit</string>
     <string name="wake_host_button_title">Wake Host</string>
     <string name="scan_network_button_title">Scan Network</string>
     <string name="delete_host_button_title">Delete Host</string>
