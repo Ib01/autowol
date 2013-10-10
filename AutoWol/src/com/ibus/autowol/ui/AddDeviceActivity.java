@@ -1,7 +1,10 @@
 package com.ibus.autowol.ui;
 
+import java.util.ArrayList;
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.widget.EditText;
 import android.widget.Spinner;
 
@@ -40,6 +43,11 @@ public class AddDeviceActivity extends SherlockActivity
 			Device d = getDevice(devicePk);
 			populateForm(d);
 		}
+		
+		
+		
+		EditText ip = (EditText) findViewById(R.id.add_device_activity_ip_address);
+		ip.setFilters(new InputFilter[] {new IpAddressTextFilter()});
     }
 
 	
