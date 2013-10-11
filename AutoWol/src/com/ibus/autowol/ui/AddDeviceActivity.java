@@ -91,6 +91,20 @@ public class AddDeviceActivity extends SherlockActivity
 		EditText ip = (EditText) findViewById(R.id.add_device_activity_ip_address);
 		EditText mac = (EditText) findViewById(R.id.add_device_activity_mac_address);
 		
+		name.setError(null);
+		if(name.getText().length() == 0)
+			name.setError("Host name cannot be left empty");
+		
+		ip.setError(null);
+		if(ip.getText().length() == 0)
+			ip.setError("Ip Address cannot be left empty");
+		
+		mac.setError(null);
+		if(mac.getText().length() == 0)
+			mac.setError("Mac Address cannot be left empty");
+		
+		
+		
 		boolean ret = (!name.getText().toString().trim().equals("") &&
 				!ip.getText().toString().trim().equals("") &&
 				!mac.getText().toString().trim().equals(""));
