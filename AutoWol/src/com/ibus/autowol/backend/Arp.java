@@ -48,7 +48,7 @@ public abstract class Arp
 	        		
 	        		//will be many devices in arp without a mac. not sure why. but i suspect the router will reply to 
 	        		//arp queries where no other device does? 
-	        		if(MacAddress.isValidMac(h.getMacAddress())) 
+	        		if(MacAddressUtil.isValidMac(h.getMacAddress())) 
 	        		{
 	        			hosts.add(h);
 	        			Log.i(TAG, "Device found in arp cache ip: " + h.getIpAddress() + ". mac:" + h.getMacAddress());

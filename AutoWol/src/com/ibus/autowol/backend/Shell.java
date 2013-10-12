@@ -10,7 +10,7 @@ public abstract class Shell
 	{
 		if(ipAddress == null)
     		throw new IllegalArgumentException("ipAddress cannot be null");
-    	else if(!IpAddress.isValidIp(ipAddress))
+    	else if(!IpAddressUtil.isValidIp(ipAddress))
     		throw new IllegalArgumentException("ipAddress is not a valid ip address");
 		
 		Process p1;

@@ -1,22 +1,38 @@
 package com.ibus.autowol.backend;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public abstract class IpAddress  
+
+public abstract class IpAddressUtil  
 {
 	private static final String NOIP = "0.0.0.0";
 	private static final String NOMASK = "255.255.255.255";
-
+	private static final String ValidIpPattern = "^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$";
+	 
 	public static String GetEmptyIp()
 	{
 		return NOIP;
 	}
+    
+    public static boolean isEmptyIp(String ipAddress)
+    {
+    	if(ipAddress == null)
+    		return true;
+    	return ipAddress.equals(NOIP);
+    }
+    
     
     public static boolean isValidIp(String ipAddress)
     {
     	if(ipAddress == null)
     		return false;
     	
-    	return !ipAddress.equals(NOIP);
+    	if(ipAddress.equals(NOIP))
+    		return false;
+    	
+    	Pattern pat = Pattern.compile(ValidIpPattern);
+    	return pat.matcher(ipAddress).matches();
     }
     
     public static boolean isValidNetworkMask(String maskAddress)

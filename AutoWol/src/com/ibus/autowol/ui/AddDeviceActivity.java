@@ -17,6 +17,8 @@ import com.ibus.autowol.backend.Database;
 import com.ibus.autowol.backend.Device;
 import com.ibus.autowol.backend.Factory;
 import com.ibus.autowol.backend.INetwork;
+import com.ibus.autowol.backend.IpAddressUtil;
+import com.ibus.autowol.backend.MacAddressUtil;
 import com.ibus.autowol.backend.Router;
 
 public class AddDeviceActivity extends SherlockActivity 
@@ -62,10 +64,10 @@ public class AddDeviceActivity extends SherlockActivity
 	@Override
     public boolean onOptionsItemSelected(MenuItem item) 
     {
-		
         switch (item.getItemId()) 
         { 
             case R.id.dialog_activity_add:
+            	TrimFields();
             	if(formIsValid())
             	{
 	            	int pk = SaveDevice();
@@ -87,31 +89,58 @@ public class AddDeviceActivity extends SherlockActivity
 	
 	public boolean formIsValid()
 	{
-		EditText name = (EditText) findViewById(R.id.add_device_activity_host_name);
-		EditText ip = (EditText) findViewById(R.id.add_device_activity_ip_address);
-		EditText mac = (EditText) findViewById(R.id.add_device_activity_mac_address);
+		EditText nameInput = (EditText) findViewById(R.id.add_device_activity_host_name);
+		EditText ipInput = (EditText) findViewById(R.id.add_device_activity_ip_address);
+		EditText macInput = (EditText) findViewById(R.id.add_device_activity_mac_address);
+		String name = nameInput.getText().toString();
+		String ip = ipInput.getText().toString();
+		String mac = macInput.getText().toString();
 		
-		name.setError(null);
-		if(name.getText().length() == 0)
-			name.setError("Host name cannot be left empty");
+		boolean isValid = true;
+		nameInput.setError(null);
+		ipInput.setError(null);
+		macInput.setError(null);
 		
-		ip.setError(null);
-		if(ip.getText().length() == 0)
-			ip.setError("Ip Address cannot be left empty");
+		if(name.length() == 0){
+			nameInput.setError("Please enter a Host Name");
+			isValid = false;
+		}
 		
-		mac.setError(null);
-		if(mac.getText().length() == 0)
-			mac.setError("Mac Address cannot be left empty");
+		if(ip.length() == 0){
+			ipInput.setError("Please enter an Ip Address");
+			isValid = false;
+		}
+		else if(!IpAddressUtil.isValidIp(ip)){
+			ipInput.setError("The Ip address you entered is not a valid IP address");
+			isValid = false;
+		}
 		
+		if(mac.length() == 0){
+			macInput.setError("Please enter a Mac Address");
+			isValid = false;
+		}
+		else if(!MacAddressUtil.isValidMac(mac)){
+			macInput.setError("The Mac address you entered is not a valid Mac address");
+			isValid = false;
+		}
 		
-		
-		boolean ret = (!name.getText().toString().trim().equals("") &&
-				!ip.getText().toString().trim().equals("") &&
-				!mac.getText().toString().trim().equals(""));
-		
-		return ret;
+		return isValid;
 	}
 	
+	
+	private void TrimFields()
+	{
+		EditText nameInput = (EditText) findViewById(R.id.add_device_activity_host_name);
+		EditText ipInput = (EditText) findViewById(R.id.add_device_activity_ip_address);
+		EditText macInput = (EditText) findViewById(R.id.add_device_activity_mac_address);
+		
+		String name = nameInput.getText().toString().trim();
+		nameInput.setText(name);
+		String ip = ipInput.getText().toString().trim();
+		ipInput.setText(ip);
+		String mac = macInput.getText().toString().trim();
+		macInput.setText(mac);
+	}
 	
 	
 	 //TODO: LAYOUT NEEDS SORTING OUT

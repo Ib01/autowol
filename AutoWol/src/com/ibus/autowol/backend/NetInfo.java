@@ -60,7 +60,7 @@ public abstract class NetInfo
                 String intfName = ni.getName();
                 String intfIp = getInterfaceFirstIp(ni);
                 
-                if (IpAddress.isValidIp(intfIp)) 
+                if (IpAddressUtil.isValidIp(intfIp)) 
                 {
                 	deviceInterface.setName(intfName);
                 	deviceInterface.setAddress(intfIp);
@@ -81,8 +81,8 @@ public abstract class NetInfo
         WifiManager wifi = (WifiManager) ctxt.getSystemService(Context.WIFI_SERVICE);
         if (wifi != null) {
         	wifiConnectionInfo = wifi.getConnectionInfo();
-        	gatewayIp = IpAddress.getStringFromIntSigned(wifi.getDhcpInfo().gateway);
-        	netmaskIp = IpAddress.getStringFromIntSigned(wifi.getDhcpInfo().netmask);
+        	gatewayIp = IpAddressUtil.getStringFromIntSigned(wifi.getDhcpInfo().gateway);
+        	netmaskIp = IpAddressUtil.getStringFromIntSigned(wifi.getDhcpInfo().netmask);
             return true;
         }
         return false;
@@ -91,7 +91,7 @@ public abstract class NetInfo
     
     private static void setHostBounds()
     {
-    	long numericDeviceIp = IpAddress.getUnsignedLongFromString(deviceInterface.getAddress()); 
+    	long numericDeviceIp = IpAddressUtil.getUnsignedLongFromString(deviceInterface.getAddress()); 
     	
     	// Detected IP
         int shift = (32 - cidr.getCidr());
@@ -107,8 +107,8 @@ public abstract class NetInfo
         	end =  (start | ((1 << shift) - 1));
         }
         
-        network_start = IpAddress.getStringFromLongUnsigned(start);
-    	network_end = IpAddress.getStringFromLongUnsigned(end);
+        network_start = IpAddressUtil.getStringFromLongUnsigned(start);
+    	network_end = IpAddressUtil.getStringFromLongUnsigned(end);
     }
 
     
@@ -154,8 +154,8 @@ public abstract class NetInfo
     public static String getNetIp() 
     {
         int shift = (32 - cidr.getCidr());
-        int start = ((int) IpAddress.getUnsignedLongFromString(deviceIp) >> shift << shift);
-        return IpAddress.getStringFromLongUnsigned((long) start);
+        int start = ((int) IpAddressUtil.getUnsignedLongFromString(deviceIp) >> shift << shift);
+        return IpAddressUtil.getStringFromLongUnsigned((long) start);
     }
 
     /*

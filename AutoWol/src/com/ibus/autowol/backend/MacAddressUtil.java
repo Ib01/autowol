@@ -1,10 +1,14 @@
 package com.ibus.autowol.backend;
 
+import java.util.regex.Pattern;
 
-public abstract class MacAddress 
+
+public abstract class MacAddressUtil 
 {
 	private final static String TAG = "MacAddress";
 	private static final String NOMAC = "00:00:00:00:00:00";
+	private static final String ValidMacPattern = "(?:[0-9a-f][0-9a-f][-:]){5}[0-9a-f][0-9a-f]";
+	
 								
 	public static String getEmptyMac()
 	{
@@ -17,7 +21,11 @@ public abstract class MacAddress
 		if(macString == null)
 			return false;
 		
-		return !(macString.equals(NOMAC));
+		if(macString.equals(NOMAC))
+			return false;
+		
+		Pattern pat = Pattern.compile(ValidMacPattern);
+    	return pat.matcher(macString).matches();
 	}
 	
 	public static String getStringFromBytes(byte[] macBytes)

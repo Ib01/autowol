@@ -44,7 +44,7 @@ public class WolSender extends AsyncTask<Device, Device, Void>  implements IWolS
 		
 		try 
 		{
-            byte[] macBytes = MacAddress.getBytesFromString(device.getMacAddress());
+            byte[] macBytes = MacAddressUtil.getBytesFromString(device.getMacAddress());
             
             byte[] bytes = new byte[6 + 16 * macBytes.length];
             for (int i = 0; i < 6; i++) 

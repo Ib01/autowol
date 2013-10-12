@@ -49,7 +49,7 @@ public class Cidr
     {
     	int cidr = DEFAULT_CIDR;
     	
-        if (IpAddress.isValidNetworkMask(netmaskIp)) 
+        if (IpAddressUtil.isValidNetworkMask(netmaskIp)) 
         {
             cidr = IpToCidr(netmaskIp);
         } else {

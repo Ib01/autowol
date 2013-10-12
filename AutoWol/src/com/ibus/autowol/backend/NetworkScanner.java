@@ -80,14 +80,14 @@ public class NetworkScanner implements Runnable, IHostEnumerator
 	{
 		Log.i(TAG, "Network scan thread entered");
 		
-		Long start = IpAddress.getUnsignedLongFromString(_networkStartIp);
-		Long end = IpAddress.getUnsignedLongFromString(_networkEndIp);
+		Long start = IpAddressUtil.getUnsignedLongFromString(_networkStartIp);
+		Long end = IpAddressUtil.getUnsignedLongFromString(_networkEndIp);
 		Message msg;
 		
 		Log.i(TAG, "starting udp probe with ip start: " + _networkStartIp + ". ip end:" + _networkEndIp);
 		for (long i = start; i <= end; i++) 
 		{	
-			Udp.probe(IpAddress.getStringFromLongUnsigned(i));
+			Udp.probe(IpAddressUtil.getStringFromLongUnsigned(i));
 			
 			try 
 			{

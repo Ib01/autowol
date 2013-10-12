@@ -5,8 +5,8 @@ import java.io.IOException;
 import android.content.Context;
 
 import com.ibus.autowol.backend.INetwork;
-import com.ibus.autowol.backend.IpAddress;
-import com.ibus.autowol.backend.MacAddress;
+import com.ibus.autowol.backend.IpAddressUtil;
+import com.ibus.autowol.backend.MacAddressUtil;
 import com.ibus.autowol.backend.Router;
 
 public class MockNetwork implements INetwork
@@ -28,11 +28,11 @@ public class MockNetwork implements INetwork
 		_networkEndIp = "10.0.0.254";
 		_isConnectedToNetwork = true;
 		
-		_router.setBssid(MacAddress.getEmptyMac());
+		_router.setBssid(MacAddressUtil.getEmptyMac());
     	_router.setSsid("Fakety fake");
     	_router.setDisplayName("Fake");
-    	_router.setIpAddress(IpAddress.GetEmptyIp());
-    	_router.setMacAddress(MacAddress.getEmptyMac());
+    	_router.setIpAddress(IpAddressUtil.GetEmptyIp());
+    	_router.setMacAddress(MacAddressUtil.getEmptyMac());
     	_router.setName("Fake");
     	_router.setNicVendor("Fake");
     	_router.setPrimaryKey(0);

@@ -24,7 +24,7 @@ public abstract class Jcifs
 					host = new Device();
 					host.setIpAddress(ipAddress);
 					host.setName(nbEntry[i].getHostName());
-					host.setMacAddress(MacAddress.getStringFromBytes(nbEntry[i].getMacAddress()));
+					host.setMacAddress(MacAddressUtil.getStringFromBytes(nbEntry[i].getMacAddress()));
 					
 					Log.i("NetbiosAddress", String.format("Netbios Address found. ip: %s, name: %s, mac: %s ", host.getIpAddress(), host.getName(), host.getMacAddress()));
 				}
@@ -55,7 +55,7 @@ public abstract class Jcifs
 	{
 		if(ipAsString == null)
     		throw new IllegalArgumentException("ipAsString cannot be null");
-    	else if(!IpAddress.isValidIp(ipAsString))
+    	else if(!IpAddressUtil.isValidIp(ipAsString))
     		throw new IllegalArgumentException("ipAsString is not a valid ip address");
 	}
 

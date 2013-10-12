@@ -46,7 +46,7 @@ public class Network implements INetwork
 		if (wifiManager != null) 
 		{
 			WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-			String gatewayIp = IpAddress.getStringFromIntSigned(wifiManager.getDhcpInfo().gateway);
+			String gatewayIp = IpAddressUtil.getStringFromIntSigned(wifiManager.getDhcpInfo().gateway);
 			
 			Router router = new Router();
 			router.setBssid(wifiInfo.getBSSID());
@@ -64,7 +64,7 @@ public class Network implements INetwork
 		WifiManager wifiManager = (WifiManager) _context.getSystemService(Context.WIFI_SERVICE);
 		if (wifiManager != null) 
 		{	
-			String _netmaskIp = IpAddress.getStringFromIntSigned(wifiManager.getDhcpInfo().netmask);
+			String _netmaskIp = IpAddressUtil.getStringFromIntSigned(wifiManager.getDhcpInfo().netmask);
 			return _netmaskIp;
 		}
 		
@@ -118,11 +118,11 @@ public class Network implements INetwork
                 NetworkInterface nic = nics.nextElement();
                 
                 String ip = getInterfaceFirstIp(nic);
-                if (IpAddress.isValidIp(ip)) 
+                if (IpAddressUtil.isValidIp(ip)) 
                 {
                 	device.setName(nic.getName());
                 	device.setIpAddress(ip);
-                	device.setMacAddress(MacAddress.getStringFromBytes(nic.getHardwareAddress()));
+                	device.setMacAddress(MacAddressUtil.getStringFromBytes(nic.getHardwareAddress()));
                     
                 	return device;
                 }
@@ -173,7 +173,7 @@ public class Network implements INetwork
 		Cidr _cidr = new Cidr(getNetmaskIp());
 		Device device = getDevice();
     	
-    	long numericDeviceIp = IpAddress.getUnsignedLongFromString(device.getIpAddress()); 
+    	long numericDeviceIp = IpAddressUtil.getUnsignedLongFromString(device.getIpAddress()); 
     	
     	// Detected IP
         int shift = (32 - _cidr.getCidr());
@@ -191,9 +191,9 @@ public class Network implements INetwork
         }
         
         if(getStart)
-        	return IpAddress.getStringFromLongUnsigned(start);
+        	return IpAddressUtil.getStringFromLongUnsigned(start);
         else
-        	return IpAddress.getStringFromLongUnsigned(end);	
+        	return IpAddressUtil.getStringFromLongUnsigned(end);	
 	}
 	
 	
