@@ -2,45 +2,68 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/awol_grey">
 
-    <TextView android:layout_width="match_parent"
-    	android:layout_height="wrap_content" 
-    	android:text="Host Name"
-    	android:layout_marginLeft="5dp" android:layout_marginTop="3dp" android:layout_marginRight="5dp">
-  	</TextView>
-    <EditText
-        android:id="@+id/add_device_activity_host_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" 
-        android:layout_marginLeft="5dp" android:layout_marginTop="0dp" android:layout_marginRight="5dp">
-    </EditText>
     
+    <LinearLayout 
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" 
+    android:background="@drawable/rounded_box"
+    android:layout_marginLeft="5dp" android:layout_marginTop="5dp" android:layout_marginRight="5dp"
+    android:padding="12dp">
     
-	<TextView android:layout_width="match_parent"
-    	android:layout_height="wrap_content" 
-    	android:text="IP Address"
-    	android:layout_marginLeft="5dp" android:layout_marginTop="5dp" android:layout_marginRight="5dp">
-  	</TextView>
-    <EditText
-        android:id="@+id/add_device_activity_ip_address"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp" android:layout_marginTop="0dp" android:layout_marginRight="5dp">
-    </EditText>
+	    <TextView android:layout_width="match_parent"
+	    	android:layout_height="wrap_content" 
+	    	android:text="Host Name" android:textStyle="bold">
+	  	</TextView>
+	    <EditText
+	        android:id="@+id/add_device_activity_host_name"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content">
+	    </EditText>
+	    
+    </LinearLayout>
     
-	<TextView android:layout_width="match_parent"
-    	android:layout_height="wrap_content"
-    	android:text="Mac Address"
-    	android:layout_marginLeft="5dp" android:layout_marginTop="5dp" android:layout_marginRight="5dp">
-  	</TextView>
-    <EditText
-        android:id="@+id/add_device_activity_mac_address"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp" android:layout_marginTop="0dp" android:layout_marginRight="5dp">
-    </EditText>
-     
+    <LinearLayout 
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" 
+    android:background="@drawable/rounded_box"
+    android:layout_marginLeft="5dp" android:layout_marginTop="5dp" android:layout_marginRight="5dp"
+    android:padding="12dp">
+    
+		<TextView android:layout_width="match_parent"
+	    	android:layout_height="wrap_content" 
+	    	android:text="IP Address" android:textStyle="bold">
+	  	</TextView>
+	    <EditText
+	        android:id="@+id/add_device_activity_ip_address"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content">
+	    </EditText>
+    
+    </LinearLayout>
+    
+    <LinearLayout 
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" 
+    android:background="@drawable/rounded_box"
+    android:layout_marginLeft="5dp" android:layout_marginTop="5dp" android:layout_marginRight="5dp"
+    android:padding="12dp">
+    
+		<TextView android:layout_width="match_parent"
+	    	android:layout_height="wrap_content"
+	    	android:text="Mac Address" android:textStyle="bold">
+	  	</TextView>
+	    <EditText
+	        android:id="@+id/add_device_activity_mac_address"
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content">
+	    </EditText>
+     </LinearLayout>
    
 </LinearLayout>
 

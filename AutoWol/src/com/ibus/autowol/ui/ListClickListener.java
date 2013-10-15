@@ -6,6 +6,7 @@ import java.util.List;
 
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.ActionMode;
@@ -37,14 +38,20 @@ public abstract class ListClickListener implements AdapterView.OnItemClickListen
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View view, int position, long arg3) 
 	{
+		LinearLayout border = (LinearLayout)view.findViewById(R.id.list_item_border);
+		
 		if(_selectedItems.contains(view))
 		{
-			view.setBackgroundColor(_activity.getResources().getColor(R.color.awol_white));
+			//border.setBackgroundResource(_activity.getResources().getDrawable(R.drawable.rounded_box));
+			border.setBackgroundResource(R.drawable.rounded_box);
+			//border.setBackgroundColor(_activity.getResources().getColor(R.color.awol_white));
 			_selectedItems.remove(view);
 		}
 		else
 		{
-			view.setBackgroundColor(_activity.getResources().getColor(com.actionbarsherlock.R.color.abs__holo_blue_light));
+			border.setBackgroundResource(R.drawable.rounded_box_selected);
+			
+			//border.setBackgroundDrawable(_activity.getResources().getDrawable(R.drawable.rounded_box_selected));
 			_selectedItems.add(view);
 		}
 		
@@ -91,7 +98,10 @@ public abstract class ListClickListener implements AdapterView.OnItemClickListen
 		{
 			for (View item : _selectedItems) 
 			{
-				item.setBackgroundColor(_activity.getResources().getColor(R.color.awol_white));
+				LinearLayout border = (LinearLayout)item.findViewById(R.id.list_item_border);
+				border.setBackgroundResource(R.drawable.rounded_box);
+				//border.setBackground(_activity.getResources().getDrawable(R.drawable.rounded_box));
+				//border.setBackgroundColor(_activity.getResources().getColor(R.color.awol_white));
 			}
 			
 			_selectedItems.clear();
