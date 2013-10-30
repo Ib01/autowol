@@ -9,10 +9,11 @@
             android:color="#2f6699" />
         <corners 
             android:radius="11dp" />
+        
         <padding
-            android:left="3dp"
-            android:top="3dp"
-            android:right="3dp"
-            android:bottom="3dp" />
-   
+            android:paddingLeft="5dp"
+		    android:paddingRight="10dp"
+		    android:paddingTop="10dp"
+		    android:paddingBottom="10dp" />
+        
 </shape>

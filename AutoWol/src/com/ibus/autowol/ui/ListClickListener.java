@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
@@ -42,16 +44,16 @@ public abstract class ListClickListener implements AdapterView.OnItemClickListen
 		
 		if(_selectedItems.contains(view))
 		{
-			//border.setBackgroundResource(_activity.getResources().getDrawable(R.drawable.rounded_box));
 			border.setBackgroundResource(R.drawable.rounded_box);
-			//border.setBackgroundColor(_activity.getResources().getColor(R.color.awol_white));
+			//setBackground(border, Color.WHITE);	
+			
 			_selectedItems.remove(view);
 		}
 		else
 		{
 			border.setBackgroundResource(R.drawable.rounded_box_selected);
-			
-			//border.setBackgroundDrawable(_activity.getResources().getDrawable(R.drawable.rounded_box_selected));
+			//setBackground(border, Color.BLUE);				
+
 			_selectedItems.add(view);
 		}
 		
@@ -100,8 +102,9 @@ public abstract class ListClickListener implements AdapterView.OnItemClickListen
 			{
 				LinearLayout border = (LinearLayout)item.findViewById(R.id.list_item_border);
 				border.setBackgroundResource(R.drawable.rounded_box);
-				//border.setBackground(_activity.getResources().getDrawable(R.drawable.rounded_box));
-				//border.setBackgroundColor(_activity.getResources().getColor(R.color.awol_white));
+
+				//setBackground(border, Color.WHITE);
+				
 			}
 			
 			_selectedItems.clear();
@@ -123,7 +126,11 @@ public abstract class ListClickListener implements AdapterView.OnItemClickListen
 	}
 	
 	
-	
+	private void setBackground(View v, int color)
+	{
+		GradientDrawable drawable = (GradientDrawable) v.getBackground();
+		drawable.setColor(color);
+	}
 	
 	
 	public abstract boolean actionItemClicked(ActionMode mode, MenuItem item);
