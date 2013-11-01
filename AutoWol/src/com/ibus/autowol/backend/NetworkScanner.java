@@ -115,6 +115,8 @@ public class NetworkScanner implements Runnable, IHostEnumerator
 			if(n == null || n == h.getIpAddress())
 				n = Jcifs.getHostName(h.getIpAddress());
 			h.setName(n);
+			
+			h.setIsLive(true);
 		
 			Log.i(TAG, String.format("found host. Ip: %s. Mac: %s.", h.getIpAddress(), h.getMacAddress()));
 			
