@@ -45,14 +45,11 @@ public abstract class ListClickListener implements AdapterView.OnItemClickListen
 		if(_selectedItems.contains(view))
 		{
 			border.setBackgroundResource(R.drawable.rounded_box);
-			//setBackground(border, Color.WHITE);	
-			
 			_selectedItems.remove(view);
 		}
 		else
 		{
 			border.setBackgroundResource(R.drawable.rounded_box_selected);
-			//setBackground(border, Color.BLUE);				
 
 			_selectedItems.add(view);
 		}
@@ -102,9 +99,6 @@ public abstract class ListClickListener implements AdapterView.OnItemClickListen
 			{
 				LinearLayout border = (LinearLayout)item.findViewById(R.id.list_item_border);
 				border.setBackgroundResource(R.drawable.rounded_box);
-
-				//setBackground(border, Color.WHITE);
-				
 			}
 			
 			_selectedItems.clear();

@@ -4,20 +4,13 @@
     android:layout_height="match_parent"
     android:orientation="horizontal">
     
-   <!--  <ImageView  
-        android:id="@+id/activity_list_item_icon" 
-        android:layout_width="wrap_content"
-    	android:layout_height="wrap_content" 
-    	android:src="@drawable/delete"></ImageView>
-     -->
-    
     <TextView android:id="@+id/navigation_list_item_description" 
 	        android:layout_width="wrap_content"
 	    	android:layout_height="wrap_content"
-	    	android:textColor="@color/awol_white"
+	    	android:textColor="#000000"
 	    	android:textStyle="bold"
 	    	android:textSize="18sp"
-	    	android:layout_marginLeft="8dp"
+			android:layout_marginLeft="8dp"
 	    	android:layout_marginTop="5dp"
 	    	android:layout_marginBottom="5dp"
 	    	android:layout_marginRight="8dp"></TextView>
