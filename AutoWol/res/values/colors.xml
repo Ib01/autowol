@@ -4,6 +4,7 @@
     <color name="awol_grey">#EDEDED</color>
     <color name="awol_green">#809130</color>
     
+    <color name="awol_item_selection">#99cff0</color>
     
     <color name="text">#000000</color>
     <color name="dissabled_text">#808080</color>
