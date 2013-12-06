@@ -49,7 +49,7 @@ public abstract class ListClickListener implements AdapterView.OnItemClickListen
 		}
 		else
 		{
-			border.setBackgroundResource(R.drawable.rounded_box_selected);
+			border.setBackgroundResource(R.drawable.card_selected);
 
 			_selectedItems.add(view);
 		}

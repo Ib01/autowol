@@ -6,13 +6,12 @@
     <color name="card_background_border3">#E0E0E0</color>
     <color name="card_background_border4">#DCDCDC</color>
     <color name="card_background_border5">#DBDBDB</color>
+    <color name="card_background_selected">#99cff0</color>
     
     <color name="awol_white">#FFFFFF</color>
     <color name="awol_blue">#1D80BF</color>
     
     <color name="awol_green">#809130</color>
-    
-    <color name="awol_item_selection">#99cff0</color>
     
     <color name="text">#000000</color>
     <color name="dissabled_text">#808080</color>
