@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item>
+        <shape android:shape="rectangle" >
+            <corners android:radius="2dp" />
+            <solid android:color="@color/card_background_border1" />
+        </shape>
+    </item>
+    <item
+        android:bottom="1dp">
+        <shape android:shape="rectangle" >
+            <corners android:radius="2dp" />
+            <solid android:color="@color/card_background_border2" />
+        </shape>
+    </item>
+    <item
+        android:bottom="2dp">
+        <shape android:shape="rectangle" >
+            <corners android:radius="2dp" />
+            <solid android:color="@color/card_background_border3" />
+        </shape>
+    </item>
+    <item
+        android:bottom="3dp">
+        <shape android:shape="rectangle" >
+            <corners android:radius="2dp" />
+            <solid android:color="@color/card_background_border4" />
+        </shape>
+    </item>
+   
+    
+    <item
+        android:bottom="5dp">
+        <shape android:shape="rectangle" >
+            <corners android:radius="2dp" />
+
+            <solid android:color="#ffffffff" />
+            
+            <padding android:bottom="8dp"
+				android:left="8dp"
+				android:right="8dp"
+				android:top="8dp" />
+            
+        </shape>
+    </item>
+
+
+</layer-list>

@@ -44,7 +44,7 @@ public abstract class ListClickListener implements AdapterView.OnItemClickListen
 		
 		if(_selectedItems.contains(view))
 		{
-			border.setBackgroundResource(R.drawable.rounded_box);
+			border.setBackgroundResource(R.drawable.card);
 			_selectedItems.remove(view);
 		}
 		else
@@ -98,7 +98,7 @@ public abstract class ListClickListener implements AdapterView.OnItemClickListen
 			for (View item : _selectedItems) 
 			{
 				LinearLayout border = (LinearLayout)item.findViewById(R.id.list_item_border);
-				border.setBackgroundResource(R.drawable.rounded_box);
+				border.setBackgroundResource(R.drawable.card);
 			}
 			
 			_selectedItems.clear();

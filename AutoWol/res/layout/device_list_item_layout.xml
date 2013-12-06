@@ -13,7 +13,7 @@
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:orientation="vertical"
-	    android:background="@drawable/rounded_box"
+	    android:background="@drawable/card"
 	    android:id="@+id/list_item_border">
 	
 	    <!-- ensures a margins are preserved when rounded_box shape is changed -->
