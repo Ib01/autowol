@@ -45,17 +45,21 @@ public class Network implements INetwork
 		
 		if (wifiManager != null) 
 		{
+			//TODO: throw appropriate error where null / empties are dound below 
+			
 			WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-			String gatewayIp = IpAddressUtil.getStringFromIntSigned(wifiManager.getDhcpInfo().gateway);
+			String gatewayIp = IpAddressUtil.getStringFromIntSigned(wifiManager.getDhcpInfo().gateway); //possibly null or empty?
 			
 			Router router = new Router();
-			router.setBssid(wifiInfo.getBSSID());
-			router.setSsid(wifiInfo.getSSID());
+			router.setBssid(wifiInfo.getBSSID()); 	//can be null
+			router.setSsid(wifiInfo.getSSID());		//can be null
 			router.setIpAddress(gatewayIp);
 
 			return router;
 		}
 
+		
+		
 		throw new RuntimeException("Could not get router. could not retrieve the system service: WIFI_SERVICE");
 	}
 	
@@ -103,9 +107,6 @@ public class Network implements INetwork
 	
     
    
-    
-    
-    
     
     //set ip of the device to the first valid ip found a network interface
     private Device getDevice() 

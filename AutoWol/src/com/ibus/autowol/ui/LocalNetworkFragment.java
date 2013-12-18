@@ -216,7 +216,18 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 		Database database = new Database(getActivity());
 		database.open();
 		Router r = database.getRouterForBssid(_network.getRouter().getBssid());
-		database.saveDeviceForMac(device, r.getPrimaryKey());
+
+		//TODO: error occurring here.  r is null. _network.getRouter().getBssid() above is probably returning null
+		//possibilities we need to cater for:
+		//
+		//1) network is down (may only be a split second).  then either _network.getRouter() throws 
+		//or _network.getRouter().getBssid() returns null.  we should show "network unavailable"? 
+		//but what then: all pinging stops, so then how does getRouter get called again without a manual scan? 
+		//
+		//2) the network bssid has changed. how do we know it has changed? and if it has we will need to reload the 
+		//whole screen and then save this item?  
+		
+		database.saveDeviceForMac(device, r.getPrimaryKey()); 
 		database.close();
 	}
 	
@@ -261,6 +272,7 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 		if(_network.isWifiConnected(getActivity()))
 		{
 			network.setText(router.getSsid());
+			network.setTag(router.getBssid());
 			return;
 		}
 		

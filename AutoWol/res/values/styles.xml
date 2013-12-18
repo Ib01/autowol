@@ -21,6 +21,9 @@
         <item name="actionModeCloseDrawable">@drawable/abs__ic_cab_done_holo_light</item>
         <item name="android:actionModeCloseDrawable">@drawable/abs__ic_cab_done_holo_light</item>
         
+        <!-- <item name="android:textViewStyle">@style/TextViewStyle</item> -->
+        
+        
        <!--  <item name="actionModeSplitBackground">@drawable/abs__cab_background_bottom_holo_dark</item>
         <item name="actionModeCloseDrawable">@drawable/abs__ic_cab_done_holo_dark</item>
         <item name="actionModeStyle">@style/Widget.Sherlock.ActionMode</item>
@@ -30,6 +33,13 @@
         
         <item name="actionModeShareDrawable">@drawable/abs__ic_menu_share_holo_dark</item> -->
     </style>
+    
+   <!--  <style name="TextViewStyle" parent="android:Widget.TextView">
+	    <item name="android:fontFamily">sans-serif-light</item>
+	    
+	    
+	</style> -->
+    
 
     <!-- style for the action bar backgrounds -->
     <style name="MyActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
