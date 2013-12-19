@@ -13,7 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class DeviceListView extends ListView 
@@ -234,21 +236,37 @@ public class DeviceListView extends ListView
 			if (host != null) 
 			{
 				//ImageView img = (ImageView) v.findViewById(R.id.host_list_item_device_image);
+				View powerlayout = (View) v.findViewById(R.id.device_list_item_power_layout);
 				TextView ip = (TextView) v.findViewById(R.id.device_list_item_ip_address);
 				TextView mac = (TextView) v.findViewById(R.id.device_list_item_mac_address);
 				TextView pcName = (TextView) v.findViewById(R.id.device_list_item_pc_name);
-
+				
 				ip.setText(host.getIpAddress());
 				mac.setText(host.getMacAddress());
 				pcName.setText(host.getName());
 				
 				v.setTag(host);
+				powerlayout.setTag(host);
+				powerlayout.setOnClickListener(new PowerButtonListener());
+				
 				setViewStyle(v);
 			}
 			
 			return v;
 		}
 		
+	}
+	
+	public class PowerButtonListener implements OnClickListener
+	{
+		@Override
+		public void onClick(View v) 
+		{
+			int i = 0;
+			
+			v.getTag();
+			
+		}	
 	}
 	
 

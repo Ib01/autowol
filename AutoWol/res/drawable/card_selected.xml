@@ -34,7 +34,7 @@
         android:bottom="5dp">
         <shape android:shape="rectangle" >
             <corners android:radius="2dp" />
-            <solid android:color="@color/card_background_selected" />
+            <solid android:color="@color/pressed_button_background" />
         </shape>
     </item>
 
