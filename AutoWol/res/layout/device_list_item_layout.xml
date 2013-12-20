@@ -18,98 +18,96 @@
 	
 	    
 	    <!-- ensures a margins are preserved when rounded_box shape is changed -->
-	    <RelativeLayout 
-	    android:layout_width="wrap_content"
+	    <LinearLayout 
+	    android:paddingLeft="2dp"
+	    android:paddingRight="2dp"
+	    android:paddingTop="2dp"
+	    android:paddingBottom="5dp"
+	    android:layout_marginBottom="5dp"
+	    android:layout_width="0dp"
 	    android:layout_height="wrap_content"
-	    android:paddingLeft="5dp"
-	    android:paddingRight="5dp"
-	    android:paddingTop="5dp"
-	    android:paddingBottom="5dp">
-	   
-		    <ImageView
-		        android:id="@+id/device_list_item_device_image" 
-		        android:src="@drawable/ic_pc_dissabled"
-			    android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_centerVertical="true"/>
-		
-        	<TextView android:id="@+id/device_list_item_pc_name"
-		        android:layout_width="wrap_content"
-		    	android:layout_height="wrap_content" 
-		    	android:textColor="@color/dissabled_text" 
-		    	android:layout_toRightOf="@+id/device_list_item_device_image"/>
-        
-    		<TextView android:id="@+id/device_list_item_ip_address"
-		        android:layout_width="wrap_content"
-		    	android:layout_height="wrap_content"
-		    	android:textColor="@color/dissabled_text" 
-		    	android:layout_toRightOf="@+id/device_list_item_device_image"
-		    	android:layout_below="@+id/device_list_item_pc_name"/>
+	    android:layout_weight="1"
+	    android:orientation="vertical">
+	    
+	        <RelativeLayout 
+	            android:layout_width="fill_parent"
+	    		android:layout_height="fill_parent">
+	        
+			    <ImageView
+			        android:id="@+id/device_list_item_device_image" 
+			        android:src="@drawable/ic_pc_dissabled"
+				    android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_centerVertical="true"/>
+			
+	        	<TextView android:id="@+id/device_list_item_pc_name"
+			        android:layout_width="wrap_content"
+			    	android:layout_height="wrap_content" 
+			    	android:textColor="@color/dissabled_text" 
+			    	android:layout_toRightOf="@+id/device_list_item_device_image"/>
+	        
+	    		<TextView android:id="@+id/device_list_item_ip_address"
+			        android:layout_width="wrap_content"
+			    	android:layout_height="wrap_content"
+			    	android:textColor="@color/dissabled_text" 
+			    	android:layout_toRightOf="@+id/device_list_item_device_image"
+			    	android:layout_below="@+id/device_list_item_pc_name"/>
+	    		  
+	    		  <TextView android:id="@+id/device_list_item_mac_address" 
+			        android:layout_width="wrap_content"
+			    	android:layout_height="wrap_content"
+			    	android:textColor="@color/dissabled_text" 
+			    	android:layout_toRightOf="@+id/device_list_item_device_image"
+			    	android:layout_below="@+id/device_list_item_ip_address"/>    
+		    	
+    		  </RelativeLayout>
     		  
-    		  <TextView android:id="@+id/device_list_item_mac_address" 
-		        android:layout_width="wrap_content"
-		    	android:layout_height="wrap_content"
-		    	android:textColor="@color/dissabled_text" 
-		    	android:layout_toRightOf="@+id/device_list_item_device_image"
-		    	android:layout_below="@+id/device_list_item_ip_address"/>    
-		    
-		</RelativeLayout>
+	    		  
+		</LinearLayout>
 		
 	    
 	    <LinearLayout 
 		android:id="@+id/device_list_item_power_layout"   
-	    android:layout_width="wrap_content"
-	    android:layout_height="fill_parent"
+	    android:orientation="vertical"
 	    android:paddingLeft="10dp"
-	    android:paddingRight="5dp"
-	    android:paddingTop="5dp"
+	    android:paddingRight="2dp"
+	    android:paddingTop="2dp"
 	    android:paddingBottom="5dp"
 	    android:layout_marginBottom="5dp"
 	    android:background="@drawable/power_button"
-	    android:gravity="right">
+	    android:layout_width="wrap_content"
+	    android:layout_height="fill_parent">
 	        
-	        
-	        <ImageView
-				        android:id="@+id/device_list_item_power_image" 
-				        android:src="@drawable/ic_power_button"
-					    android:layout_width="wrap_content"
-						android:layout_height="wrap_content" 
-						android:layout_alignParentTop="true"
-						android:layout_alignParentRight="true"/>
-	        
-	        
-	       <!--  <LinearLayout
-				android:id="@+id/device_list_item_power_layout"   
-			    android:layout_width="wrap_content"
-			    android:layout_height="wrap_content"
-			    android:orientation="horizontal"
-			    android:layout_alignParentTop="true"
-			    android:layout_alignParentRight="true"
-			    android:background="@drawable/power_button">
-		    		  
-		    		  <TextView  
+	        <LinearLayout
+	            android:orientation="horizontal"
+	            android:layout_width="fill_parent"
+	    		android:layout_height="0dp"
+	    		android:layout_weight="1">
+	    	
+	            <TextView  
 				        android:layout_width="wrap_content"
 				    	android:layout_height="wrap_content"
 				    	android:textColor="@color/dissabled_text" 
 				    	android:textSize="26sp"
-				    	android:text="Off"/>    
-		    		
-				        <ImageView
-				        android:id="@+id/device_list_item_power_image" 
-				        android:src="@drawable/ic_power_button"
-					    android:layout_width="wrap_content"
-						android:layout_height="wrap_content" />
-				
-				</LinearLayout>
-		        
-		        
-    		  	<TextView android:id="@+id/device_list_item_last_scanned"
+				    	android:text="Off"
+				    	android:layout_gravity="right"/>    
+	            
+	        	<ImageView
+			        android:id="@+id/device_list_item_power_image" 
+			        android:src="@drawable/ic_power_button"
+				    android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_gravity="right" />
+	        	
+	        </LinearLayout>
+	        
+	        
+	        <TextView android:id="@+id/device_list_item_last_scanned"
 				        android:layout_width="wrap_content"
 				    	android:layout_height="wrap_content"
 				    	android:text="12/12/2004"
 				    	android:textColor="@color/dissabled_text" 
-				    	android:layout_alignParentBottom="true"
-				    	android:layout_alignParentRight="true"/> -->
+				    	android:gravity="right"/>
 	        
 	    </LinearLayout>
 	    
