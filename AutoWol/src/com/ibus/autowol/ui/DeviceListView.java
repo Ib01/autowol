@@ -22,6 +22,7 @@ public class DeviceListView extends ListView
 {
 	HostListAdapter _deviceListadapter;
 	private List<Device> _devices;
+	List<OnDeviceWakeListener> _deviceWakeListeners = new ArrayList<OnDeviceWakeListener>(); 
 	
 	public DeviceListView(Context context) {
 		super(context);
@@ -243,7 +244,11 @@ public class DeviceListView extends ListView
 				
 				ip.setText(host.getIpAddress());
 				mac.setText(host.getMacAddress());
-				pcName.setText(host.getName());
+				
+				if(host.getName() == null || host.getName().isEmpty())
+					pcName.setText("Unknown Host Name");
+				else
+					pcName.setText(host.getName());
 				
 				v.setTag(host);
 				powerlayout.setTag(host);
@@ -262,12 +267,18 @@ public class DeviceListView extends ListView
 		@Override
 		public void onClick(View v) 
 		{
-			int i = 0;
-			
-			v.getTag();
+			for(OnDeviceWakeListener l : _deviceWakeListeners){
+				l.onDeviceWake((Device)v.getTag());
+			}
 			
 		}	
 	}
+	
+	
+	public void addOnDeviceWakeListener(OnDeviceWakeListener listener) 
+	{
+		_deviceWakeListeners.add(listener);
+    }
 	
 
 }

@@ -6,30 +6,67 @@
     android:background="@color/activity_background">
     
     
-    <LinearLayout 
+    <RelativeLayout 
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal" 
     android:background="@drawable/card"
-    android:layout_margin="5dp">
+    android:layout_margin="5dp"
+    android:paddingBottom="5dp"
+    android:paddingRight="5dp">
     
         <ImageView
-            android:paddingLeft="2dp"
-		    android:paddingRight="5dp"
-		    android:paddingTop="2dp"
-		    android:paddingBottom="5dp"
+            android:id="@+id/local_network_fragment_image"
             android:layout_width="wrap_content"
     		android:layout_height="wrap_content"
-    		android:src="@drawable/ic_wifi_connection"></ImageView> 
+    		android:src="@drawable/ic_wifi_connection" 
+    		android:layout_centerVertical="true" /> 
     	
         <TextView 
+            android:id="@+id/local_network_fragment_network"
             android:layout_width="wrap_content"
     		android:layout_height="wrap_content"
-    		android:id="@+id/local_network_fragment_network"
     		android:textSize="22sp" 
-			android:layout_marginLeft="5dp"/>
+    		android:textStyle="bold"
+			android:layout_marginLeft="5dp"
+			android:textColor="@color/dissabled_text" 
+			android:layout_toRightOf="@+id/local_network_fragment_image"
+			android:layout_marginTop="5dp"/>
         
-    </LinearLayout>
+        <TextView 
+	        android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	android:text="Wireless Network"
+	    	android:textColor="@color/dissabled_text" 
+	    	android:layout_toRightOf="@+id/local_network_fragment_image"
+	    	android:layout_below="@+id/local_network_fragment_network"
+	    	android:layout_marginLeft="5dp"/>
+        
+       
+        
+        <TextView
+            android:id="@+id/local_network_fragment_live_count" 
+	        android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	android:text="3/5"
+	    	android:textStyle="bold"
+	    	android:textSize="22sp" 
+	    	android:textColor="@color/dissabled_text" 
+	    	android:layout_alignParentRight="true"
+	    	android:layout_marginTop="5dp"/>
+        
+        
+        <TextView 
+            android:id="@+id/local_network_fragment_last_scanned"
+	        android:layout_width="wrap_content"
+	    	android:layout_height="wrap_content"
+	    	android:text="12/12/2004"
+	    	android:textColor="@color/dissabled_text" 
+	    	android:layout_alignParentRight="true"
+	    	android:layout_below="@+id/local_network_fragment_live_count" 
+	    	android:layout_marginLeft="5dp"/>
+	    
+       
+    </RelativeLayout>
 
    	<com.ibus.autowol.ui.DeviceListView 
    	    android:id="@+id/local_network_fragment_device_list"
@@ -38,9 +75,7 @@
 		android:dividerHeight="0dp"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="5dp">
+        android:layout_margin="5dp">
    	</com.ibus.autowol.ui.DeviceListView>
    	
 

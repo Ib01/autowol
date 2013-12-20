@@ -38,7 +38,7 @@ import com.ibus.autowol.backend.ThreadResult;
 import com.ibus.autowol.backend.WolSender;
 
 public class LocalNetworkFragment extends SherlockFragment 
-implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, OnPingProgressListener, OnPingCompleteListener
+implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, OnPingProgressListener, OnPingCompleteListener, OnDeviceWakeListener
 {
 	private final static String TAG = "AutoWol-DevicesListFragment";
 	ProgressDialog _progressDialog;
@@ -80,6 +80,7 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 		
 		_deviceListView = (DeviceListView) getActivity().findViewById(R.id.local_network_fragment_device_list);
 		_deviceListView.setOnItemClickListener(new DeviceListClickListener()); 
+		_deviceListView.addOnDeviceWakeListener(this);
 		
 		Router r = _network.getRouter();
 		saveRouter(r);
@@ -182,7 +183,12 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 	}
 
 	
-	
+	@Override
+	public void onDeviceWake(Device device) 
+	{
+		int i = 0;
+		
+	}
 	
 	
 
@@ -372,6 +378,8 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 		
 		return dl;
 	}
+
+	
 	
 	
 }

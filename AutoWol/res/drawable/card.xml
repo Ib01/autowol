@@ -30,8 +30,7 @@
     </item>
    
     
-    <item
-        android:bottom="5dp">
+    <item android:bottom="5dp">
         <shape android:shape="rectangle" >
             <corners android:radius="2dp" />
             <solid android:color="@color/unpressed_button_background" />
