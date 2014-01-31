@@ -25,6 +25,7 @@ import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.MenuItem;
 import com.ibus.autowol.MainActivity;
 import com.ibus.autowol.R;
+import com.ibus.autowol.backend.ConnectionInfo;
 import com.ibus.autowol.backend.Database;
 import com.ibus.autowol.backend.Device;
 import com.ibus.autowol.backend.Factory;
@@ -57,9 +58,6 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 
 	{
-		//need to create network here because our activity context has not yet been created
-		_network = Factory.getNetwork(getActivity());
-		
 		_hostEnumerator = Factory.getHostEnumerator();
 		_hostEnumerator.addOnScanProgressListener(this);
 		_hostEnumerator.addOnScanCompleteListener(this);
@@ -82,20 +80,25 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 		_deviceListView.setOnItemClickListener(new DeviceListClickListener()); 
 		_deviceListView.addOnDeviceWakeListener(this);
 		
-		Router r = _network.getRouter();
-		saveRouter(r);
-		setNetworkHeader(r);
-		
-		if(_network.isWifiConnected(getActivity()))
+		_network = Factory.getNetwork(getActivity());
+		if(ConnectionInfo.isWifiConnected(getActivity()) && _network.infoIsValid())
 		{
+			Router r = _network.getRouter();
+			saveRouter(r);
+			setNetworkHeader(r);
+			
 			boolean devicesFound = loadDevicesList(r);
 			if(!devicesFound)
 			{
-				//scan network if our network is up and we don't currently have any devices for it in our db 
+				//TODO: prompt user? do scan in dialogue?
 				ScanNetwork();	
 			}
+			
+			return;
 		}
 		
+		//TODO: Display network not available
+		Toast.makeText(getActivity(), "Cannot display network devices: you are not connected to a network", Toast.LENGTH_LONG).show();
 	}
 	
 	
@@ -105,7 +108,7 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 		//fragment is visible here
 		super.onResume();
 		
-		if(_network.isWifiConnected(getActivity()))
+		if(ConnectionInfo.isWifiConnected(getActivity()))
 			_pinger.start(getDevicesListCopy(_deviceListView.getDevices()));
 	
 		Log.i(TAG, "onResume");
@@ -131,15 +134,18 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 	@Override
 	public void onScanStart() 
 	{
-		Router r = _network.getRouter();
-		saveRouter(r);
-		setNetworkHeader(r);
+		_network = Factory.getNetwork(getActivity());
 		
-		if(_network.isWifiConnected(getActivity()))
+		if(ConnectionInfo.isWifiConnected(getActivity()) && _network.infoIsValid())
 		{
+			Router r = _network.getRouter();
+			saveRouter(r);
+			setNetworkHeader(r);
+			
 			ScanNetwork();
 			return;
 		}
+		
 		Toast.makeText(getActivity(), "Network scan aborted: you are not connected to a network", Toast.LENGTH_LONG).show();
 	}
 	
@@ -219,6 +225,9 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 	
 	public void saveDevice(Device device) 
 	{
+		if(!ConnectionInfo.isWifiConnected(getActivity()) || !_network.infoIsValid())
+			return;
+		
 		Database database = new Database(getActivity());
 		database.open();
 		Router r = database.getRouterForBssid(_network.getRouter().getBssid());

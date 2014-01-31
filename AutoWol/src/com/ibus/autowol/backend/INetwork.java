@@ -12,19 +12,12 @@ import android.content.Context;
 
 public interface INetwork 
 {
-    public Router getRouter();
+    public Router getRouter() ;
 	public String getNetmaskIp(); 
 	public String getNetworkEndIp();
 	public String getNetworkStartIp();
+	public boolean infoIsValid();
 	
-    public boolean IsGateway(String ipAddress);
-    
-    public boolean isMobileNetworkConnected(Context ctxt); 
-    
-    public boolean isWifiConnected(Context ctxt);
-    
     public String getBroadcastAddress() throws IOException; 
     
-    /*public boolean getMobileInfo();
-    public String getNetIp();*/
 }

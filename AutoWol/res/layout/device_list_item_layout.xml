@@ -35,7 +35,7 @@
 	        
 			    <ImageView
 			        android:id="@+id/device_list_item_device_image" 
-			        android:src="@drawable/ic_pc_dissabled"
+			        android:src="@drawable/ic_pc"
 				    android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:layout_centerVertical="true"/>
@@ -90,6 +90,7 @@
 					/>
 	    	
             <TextView  
+                android:id="@+id/device_list_item_power_status"
 			        android:layout_width="wrap_content"
 			    	android:layout_height="wrap_content"
 			    	android:textColor="@color/dissabled_text" 

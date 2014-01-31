@@ -388,7 +388,7 @@ public class Database {
 	  
 	  public int addRouter(Router router)
 	  {
-		  ContentValues cv = getRouterContentValues(router);;
+		  ContentValues cv = getRouterContentValues(router);
 		  return (int)db.insert(TABLE_ROUTER, null, cv);
 	  }
 	  

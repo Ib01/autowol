@@ -146,7 +146,7 @@ public class PersistantPinger implements Runnable, IPinger
 	
 	public synchronized void setDevices(List<Device> devices)
 	{
-			_devices = devices;
+		_devices = devices;
 	}
 	
 	private boolean getContinue()

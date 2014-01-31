@@ -180,16 +180,20 @@ public class DeviceListView extends ListView
 		TextView pcName = (TextView) v
 				.findViewById(R.id.device_list_item_pc_name);
 		ImageView img = (ImageView) v
-				.findViewById(R.id.device_list_item_device_image);
-
+				.findViewById(R.id.device_list_item_power_image);
+		TextView powerStatus = (TextView) v
+				.findViewById(R.id.device_list_item_power_status);
+		
+		powerStatus.setText("Off");
 		img.setImageDrawable(getContext().getResources().getDrawable(
-				R.drawable.ic_pc_dissabled));
-		ip.setTextColor(getContext().getResources().getColor(
+				R.drawable.ic_power_button));
+		
+		/*ip.setTextColor(getContext().getResources().getColor(
 				R.color.dissabled_text));
 		mac.setTextColor(getContext().getResources().getColor(
 				R.color.dissabled_text));
 		pcName.setTextColor(getContext().getResources().getColor(
-				R.color.dissabled_text));
+				R.color.dissabled_text));*/
 	}
 
 	private void setViewOn(View v) 
@@ -200,13 +204,18 @@ public class DeviceListView extends ListView
 		TextView pcName = (TextView) v
 				.findViewById(R.id.device_list_item_pc_name);
 		ImageView img = (ImageView) v
-				.findViewById(R.id.device_list_item_device_image);
-
+				.findViewById(R.id.device_list_item_power_image);
+		TextView powerStatus = (TextView) v
+				.findViewById(R.id.device_list_item_power_status);
+		
+		powerStatus.setText("On");
 		img.setImageDrawable(getContext().getResources().getDrawable(
-				R.drawable.ic_pc));
-		ip.setTextColor(getContext().getResources().getColor(R.color.text));
+				R.drawable.ic_power_button_on));
+		
+		
+		/*ip.setTextColor(getContext().getResources().getColor(R.color.text));
 		mac.setTextColor(getContext().getResources().getColor(R.color.text));
-		pcName.setTextColor(getContext().getResources().getColor(R.color.text));
+		pcName.setTextColor(getContext().getResources().getColor(R.color.text));*/
 	}
 	
 	
