@@ -225,9 +225,6 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 	
 	public void saveDevice(Device device) 
 	{
-		if(!ConnectionInfo.isWifiConnected(getActivity()) || !_network.infoIsValid())
-			return;
-		
 		Database database = new Database(getActivity());
 		database.open();
 		Router r = database.getRouterForBssid(_network.getRouter().getBssid());
