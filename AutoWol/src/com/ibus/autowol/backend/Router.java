@@ -1,6 +1,7 @@
 package com.ibus.autowol.backend;
 
 import java.io.Serializable;
+import java.util.Date;
 
 
 public class Router extends Device implements Serializable
@@ -9,6 +10,7 @@ public class Router extends Device implements Serializable
 	
 	private String bssid;
 	private String ssid;
+	private String _lastScanned;
 	
 	// Properties //////////////////////////////////////////////////////////
 
@@ -23,6 +25,12 @@ public class Router extends Device implements Serializable
 	}
 	public void setBssid(String bssid) {
 		this.bssid = bssid;
+	}
+	public String getLastScanned() {
+		return _lastScanned;
+	}
+	public void setLastScanned(String lastScanned) {
+		_lastScanned = lastScanned;
 	}
 	
 	// Constructors //////////////////////////////////////////////////////////

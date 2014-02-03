@@ -18,7 +18,7 @@ public class Database {
 	  private final Context context;
 	  private myDbHelper dbHelper;
 	  
-	  private static final int DATABASE_VERSION = 10;
+	  private static final int DATABASE_VERSION = 11;
 	  private static final String DATABASE_NAME = "AutoWol2.db";
 	  	
 	  //
@@ -73,6 +73,7 @@ public class Database {
 	  public static final String COLUMN_ROUTER_MAC="mac";
 	  public static final String COLUMN_ROUTER_BSSID="bssid";
 	  public static final String COLUMN_ROUTER_NIC_VENDOR="nic_vendor";
+	  public static final String COLUMN_ROUTER_LAST_SCANNED="last_scanned";
 	  
 	  
 	  private static final String SQL_CREATE_TABLE_ROUTER = 
@@ -84,7 +85,8 @@ public class Database {
 		  + COLUMN_ROUTER_IP + " text, "
 		  + COLUMN_ROUTER_MAC + " text, "
 		  + COLUMN_ROUTER_BSSID + " text not null, "
-		  + COLUMN_ROUTER_NIC_VENDOR +  " text"
+		  + COLUMN_ROUTER_NIC_VENDOR +  " text, "
+		  + COLUMN_ROUTER_LAST_SCANNED + " text not null"
 		  + ");";
 	  
 	  private static final String SQL_DROP_TABLE_ROUTER = "DROP TABLE IF EXISTS " + TABLE_ROUTER;
@@ -96,7 +98,7 @@ public class Database {
 	  public static final int ORDINAL_ROUTER_MAC = 3;
 	  public static final int ORDINAL_ROUTER_BSSID = 4;
 	  public static final int ORDINAL_ROUTER_NIC_VENDOR = 5;
-	  
+	  public static final int ORDINAL_ROUTER_LAST_SCANNED = 6;
 	  
 	  //
 	  // SCHEDULE TABLE
@@ -508,10 +510,10 @@ public class Database {
 			h.setMacAddress(cursor.getString(ORDINAL_ROUTER_MAC));
 			h.setBssid(cursor.getString(ORDINAL_ROUTER_BSSID));
 			h.setNicVendor(cursor.getString(ORDINAL_ROUTER_NIC_VENDOR));
+			h.setLastScanned(cursor.getString(ORDINAL_ROUTER_LAST_SCANNED));
 			
 			return h;
 	  }
-	  
 	  
 	  private ContentValues getRouterContentValues(Router router)
 	  {
@@ -522,11 +524,10 @@ public class Database {
 		  contentValues.put(COLUMN_ROUTER_MAC, router.getMacAddress());
 		  contentValues.put(COLUMN_ROUTER_BSSID, router.getBssid());
 		  contentValues.put(COLUMN_ROUTER_NIC_VENDOR, router.getNicVendor());
+		  contentValues.put(COLUMN_ROUTER_LAST_SCANNED, router.getLastScanned());
 		  
 		  return contentValues;
 	  }
-	  
-
 	  
 	  public ContentValues getDeviceContentValues(Device device)
 	  {

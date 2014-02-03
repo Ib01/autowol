@@ -87,35 +87,18 @@ public class MockNetwork implements INetwork
     	return ipAddress.equals(_router.getIpAddress());
     }
 
-	
-	
-	
-	@Override
-	public boolean isMobileNetworkConnected(Context context) {
-		return _isMobileNetworkConnected;
-	}
-	
-	public void setIsMobileNetworkConnected(boolean isConnected)
-    {
-		_isMobileNetworkConnected = isConnected;
-    }
-	
 
-	@Override
-	public boolean isWifiConnected(Context context) {
-		// TODO Auto-generated method stub
-		return _isWifiNetworkConnected;
-	}
-	
-	public void setIsWifiNetworkConnected(boolean isConnected)
-    {
-		_isWifiNetworkConnected = isConnected;
-    }
 
 	@Override
 	public String getBroadcastAddress() throws IOException {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public boolean infoIsValid() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 	
 }

@@ -6,6 +6,7 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.Date;
 import java.util.Enumeration;
 
 import android.content.Context;
@@ -58,7 +59,8 @@ public class Network implements INetwork
 		_router.setBssid(wifiInfo.getBSSID()); 	
 		_router.setSsid(wifiInfo.getSSID());		
 		_router.setIpAddress(IpAddressUtil.getStringFromIntSigned(wifiManager.getDhcpInfo().gateway));
-
+		_router.setLastScanned(android.text.format.DateFormat.getDateFormat(_context).format(new Date()));
+		
 		_netmaskIp = IpAddressUtil.getStringFromIntSigned(wifiManager.getDhcpInfo().netmask); //will we always have this info?
 		_networkEndIp = IpAddressUtil.getStringFromLongUnsigned(GetNetworkBound(false));
 		_networkStartIp = IpAddressUtil.getStringFromLongUnsigned(GetNetworkBound(true));

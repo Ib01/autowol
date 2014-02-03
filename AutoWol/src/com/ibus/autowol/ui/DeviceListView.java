@@ -134,7 +134,7 @@ public class DeviceListView extends ListView
 	}
 	
 	
-	public void addDevice(Device device)
+	public void addOrUpdateDevice(Device device)
 	{
 		if(!deviceIsInList(device.getMacAddress()))
 		{
@@ -157,7 +157,16 @@ public class DeviceListView extends ListView
 		
 		_deviceListadapter.notifyDataSetChanged();
 	}
-
+	
+	public int getDevicesCount()
+	{
+		return _devices.size();
+	}
+	
+	public int getLiveDevicesCount()
+	{
+		return getLiveDevices().size();
+	}
 	
 	// /////////////////////////////////////////////////////////////////////////////////////////////////
 	// Utilities

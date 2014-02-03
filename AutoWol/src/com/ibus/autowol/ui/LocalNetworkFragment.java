@@ -2,6 +2,7 @@ package com.ibus.autowol.ui;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
@@ -85,9 +86,9 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 		{
 			Router r = _network.getRouter();
 			saveRouter(r);
+			boolean devicesFound = loadDevicesList(r, r.getBssid());
 			setNetworkHeader(r);
 			
-			boolean devicesFound = loadDevicesList(r);
 			if(!devicesFound)
 			{
 				//TODO: prompt user? do scan in dialogue?
@@ -152,11 +153,14 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 	@Override
 	public void onScanProgress(ThreadResult result) 
 	{
+		//note: we dont have to check validity of router since our router was valid before our scan. if wifi was interupted during a 
+		//scan then presumably it will stop? (TODO:CHECK THIS ASSUMPTION) 
 		if(result.device != null)
 		{
-			_deviceListView.addDevice(result.device);
-			saveDevice(result.device);
+			_deviceListView.addOrUpdateDevice(result.device);
+			saveDevice(result.device, _network.getRouter().getBssid());
 			refreshPinger();
+			setDevicesLiveCount(_network.getRouter());
 		}
 	}
 	
@@ -178,8 +182,11 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 			return;
 		}
 		
+		//note: we dont have to check validity of router since our router was valid during the last scan. if wifi was interupted during a 
+		//scan then ping should continue but do nothing? (TODO:CHECK THIS ASSUMPTION)
 		Device d = _deviceListView.setDeviceLive(result.device.getMacAddress(),result.success);
-		saveDevice(d);
+		saveDevice(d, _network.getRouter().getBssid());
+		setDevicesLiveCount(_network.getRouter());
 	}
 	
 	@Override
@@ -223,11 +230,11 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 	}
 	
 	
-	public void saveDevice(Device device) 
+	public void saveDevice(Device device, String routerBssid) 
 	{
 		Database database = new Database(getActivity());
 		database.open();
-		Router r = database.getRouterForBssid(_network.getRouter().getBssid());
+		Router r = database.getRouterForBssid(routerBssid);
 
 		//TODO: error occurring here.  r is null. _network.getRouter().getBssid() above is probably returning null
 		//possibilities we need to cater for:
@@ -246,23 +253,19 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 	//Router router = _network.getRouter();
 	public void saveRouter(Router router) 
 	{
-		if(_network.isWifiConnected(getActivity()))
-		{
-			Database database = new Database(getActivity());
-			database.open();
-			database.saveRouterForBssid(router);
-			database.close();
-		}
+		Database database = new Database(getActivity());
+		database.open();
+		database.saveRouterForBssid(router);
+		database.close();
 	}
 	
-	public boolean loadDevicesList(Router router)
+	public boolean loadDevicesList(Router router, String bssid)
 	{
 		List<Device> devices = new ArrayList<Device>();
 		
 		Database database = new Database(getActivity());
 		database.open();
 		
-		String bssid = router.getBssid();
 		devices = database.getDevicesForRouter(bssid);
 		_deviceListView.setDevices(devices);
 		
@@ -280,16 +283,33 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 	public void setNetworkHeader(Router router)
 	{
 		TextView network = (TextView) getActivity().findViewById(R.id.local_network_fragment_network);
-		
-		if(_network.isWifiConnected(getActivity()))
-		{
-			network.setText(router.getSsid());
-			network.setTag(router.getBssid());
-			return;
+	
+		//TODO: display larger network unavailable message instead of setting the header?
+		if(ConnectionInfo.isWifiConnected(getActivity())){
+			network.setText("WiFi Unavailable");
+			network.setTag("");
 		}
 		
-		network.setText("WiFi Unavailable");
+		network.setText(router.getSsid());
+		network.setTag(router.getBssid());
+		setDevicesLiveCount(router);
+		setLastScanned(router);
+		return;
 	}
+	
+	public void setDevicesLiveCount(Router router)
+	{
+		TextView count = (TextView) getActivity().findViewById(R.id.local_network_fragment_live_count);
+		count.setText(String.format("%d/%d", _deviceListView.getLiveDevicesCount(), _deviceListView.getDevicesCount())); 
+	}
+
+	public void setLastScanned(Router router)
+	{
+		TextView lastScanned = (TextView) getActivity().findViewById(R.id.local_network_fragment_last_scanned);
+		lastScanned.setText(_network.getRouter().getLastScanned());
+	}
+	
+	
 	
 	
 	private void ScanNetwork()
@@ -366,7 +386,7 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 	public void addOrUpdateDevice(int devicePk) 
 	{
 		Device d = getDevice(devicePk);
-		_deviceListView.addDevice(d);
+		_deviceListView.addOrUpdateDevice(d);
 		refreshPinger();
 	}
 	
