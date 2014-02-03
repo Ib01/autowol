@@ -116,7 +116,7 @@ public class NetworkScanner implements Runnable, IHostEnumerator
 			if(n == null || n.isEmpty() || n.equals(h.getIpAddress()))
 				n = Jcifs.getHostName(h.getIpAddress());
 			
-			if(n == null || n.isEmpty() || n.equals(h.getIpAddress()))
+			if(n != null && !n.isEmpty() && !n.equals(h.getIpAddress()))
 				h.setName(n); //set name if it does not equal the ip 
 			
 			h.setIsLive(true);
