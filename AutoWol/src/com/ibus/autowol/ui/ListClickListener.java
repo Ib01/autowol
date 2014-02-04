@@ -29,6 +29,15 @@ public abstract class ListClickListener implements AdapterView.OnItemClickListen
 	HashSet<View> _selectedItems = new HashSet<View>();
 	ActionMode _actionMode;
 	SherlockFragmentActivity _activity;
+	private boolean _isEnabled = true;
+	
+	public boolean isEnabled() {
+		return _isEnabled;
+	}
+	public void setEnabled(boolean isEnabled) {
+		_isEnabled = isEnabled;
+	}
+
 
 	public ListClickListener(SherlockFragmentActivity activity, int selectionContextMenu)
 	{
@@ -50,7 +59,6 @@ public abstract class ListClickListener implements AdapterView.OnItemClickListen
 		else
 		{
 			border.setBackgroundResource(R.drawable.card_selected);
-
 			_selectedItems.add(view);
 		}
 		
@@ -103,7 +111,7 @@ public abstract class ListClickListener implements AdapterView.OnItemClickListen
 			
 			_selectedItems.clear();
 		}
-	};
+	}
 	
 	
 	@SuppressWarnings("unchecked")
@@ -130,7 +138,7 @@ public abstract class ListClickListener implements AdapterView.OnItemClickListen
 	public abstract boolean actionItemClicked(ActionMode mode, MenuItem item);
 	
 
-};
+}
 
 
 

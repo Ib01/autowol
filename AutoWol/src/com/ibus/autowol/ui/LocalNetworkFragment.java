@@ -40,7 +40,7 @@ import com.ibus.autowol.backend.ThreadResult;
 import com.ibus.autowol.backend.WolSender;
 
 public class LocalNetworkFragment extends SherlockFragment 
-implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, OnPingProgressListener, OnPingCompleteListener, OnDeviceWakeListener
+implements OnScanProgressListener, OnScanStartListener, OnPingProgressListener, OnPingCompleteListener, OnDeviceWakeListener
 {
 	private final static String TAG = "AutoWol-DevicesListFragment";
 	ProgressDialog _progressDialog;
@@ -49,6 +49,19 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 	INetwork _network;
 	DeviceListView _deviceListView;
 	
+	public void addScanCompleteListener(OnScanCompleteListener listener) {
+		_hostEnumerator.addOnScanCompleteListener(listener);
+    }
+	
+	public LocalNetworkFragment()
+	{
+		_hostEnumerator = Factory.getHostEnumerator();
+		_hostEnumerator.addOnScanProgressListener(this);
+		
+		_pinger = Factory.getPinger();
+        _pinger.addOnPingCompleteListener(this);
+        _pinger.addOnPingProgressListener(this);
+	}
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) 
@@ -59,13 +72,7 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 
 	{
-		_hostEnumerator = Factory.getHostEnumerator();
-		_hostEnumerator.addOnScanProgressListener(this);
-		_hostEnumerator.addOnScanCompleteListener(this);
 		
-		_pinger = Factory.getPinger();
-        _pinger.addOnPingCompleteListener(this);
-        _pinger.addOnPingProgressListener(this);
 		
         View v = inflater.inflate(R.layout.local_network_fragment_layout, container, false);
         return v; 
@@ -164,11 +171,11 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 		}
 	}
 	
-	@Override
+	/*@Override
 	public void onScanComplete() 
 	{
 		_progressDialog.dismiss();
-	}
+	}*/
 
 	
 	@Override
@@ -235,17 +242,6 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 		Database database = new Database(getActivity());
 		database.open();
 		Router r = database.getRouterForBssid(routerBssid);
-
-		//TODO: error occurring here.  r is null. _network.getRouter().getBssid() above is probably returning null
-		//possibilities we need to cater for:
-		//
-		//1) network is down (may only be a split second).  then either _network.getRouter() throws 
-		//or _network.getRouter().getBssid() returns null.  we should show "network unavailable"? 
-		//but what then: all pinging stops, so then how does getRouter get called again without a manual scan? 
-		//
-		//2) the network bssid has changed. how do we know it has changed? and if it has we will need to reload the 
-		//whole screen and then save this item?  
-		
 		database.saveDeviceForMac(device, r.getPrimaryKey()); 
 		database.close();
 	}
@@ -314,12 +310,12 @@ implements OnScanProgressListener, OnScanCompleteListener, OnScanStartListener, 
 	
 	private void ScanNetwork()
 	{
-		_progressDialog = new ProgressDialog(getActivity(), AlertDialog.THEME_HOLO_DARK);
+		/*_progressDialog = new ProgressDialog(getActivity(), AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
 		_progressDialog.setTitle("Scanning network...");
 		_progressDialog.setMessage("Please wait.");
 		_progressDialog.setCancelable(false);
 		_progressDialog.setIndeterminate(true);
-		_progressDialog.show();
+		_progressDialog.show();*/
 		
 		_hostEnumerator.start(_network);
 	}

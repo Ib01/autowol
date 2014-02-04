@@ -6,20 +6,24 @@ import java.util.List;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.widget.LinearLayout;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.ibus.autowol.ui.ActivityListItem;
 import com.ibus.autowol.ui.AddDeviceActivity;
 import com.ibus.autowol.ui.AddScheduleActivity;
 import com.ibus.autowol.ui.LocalNetworkFragment;
 import com.ibus.autowol.ui.NavigationSpinnerAdapter;
+import com.ibus.autowol.ui.OnScanCompleteListener;
 import com.ibus.autowol.ui.OnScanStartListener;
 import com.ibus.autowol.ui.SchedulesListFragment;
 
-public class MainActivity extends SherlockFragmentActivity 
+public class MainActivity extends SherlockFragmentActivity implements OnScanCompleteListener
 {	
 	public static final int AddScheduleActivityRequest = 1;
 	public static final int AddDeviceActivityRequest = 2;
@@ -56,6 +60,9 @@ public class MainActivity extends SherlockFragmentActivity
         switch (item.getItemId()) 
         { 
             case R.id.devices_list_fragment_scan:
+            	if(_actionMode == null)
+    				_actionMode = startActionMode(new ScanActionModeCallback());
+            	
             	startScan();  
             	break;
             case R.id.devices_list_fragment_add:
@@ -70,6 +77,44 @@ public class MainActivity extends SherlockFragmentActivity
     }    
    
     
+    ActionMode _actionMode;
+    private class ScanActionModeCallback implements ActionMode.Callback
+	{
+		@Override
+		public boolean onCreateActionMode(ActionMode mode, Menu menu) 
+		{
+			MenuInflater inflater = mode.getMenuInflater();
+			inflater.inflate(R.menu.network_scan_context_menu, menu);
+			return true;
+		}
+
+		@Override
+		public boolean onActionItemClicked(ActionMode mode, MenuItem item) 
+		{
+			return true;
+		}
+
+		@Override
+		public void onDestroyActionMode(ActionMode mode) 
+		{
+			_actionMode = null;
+		}
+		
+		@Override
+		public boolean onPrepareActionMode(ActionMode mode, Menu menu) 
+		{
+			return false;
+		}
+		
+		
+	}
+    
+    
+    @Override
+	public void onScanComplete() {
+    	_actionMode.finish();
+	}
+	
 
 	private void startScan()
     {
@@ -78,7 +123,10 @@ public class MainActivity extends SherlockFragmentActivity
 			listener.onScanStart();
         }
     }
-    
+
+	
+	
+	
     @Override
     protected void onPause() {
         super.onPause();
@@ -166,16 +214,8 @@ public class MainActivity extends SherlockFragmentActivity
 				break;
 		}
 	}
-	
-	
-	
-	
-	
-	
 
-    
-
-  
+	
     /*
 	 @Override        
 	 public void onSaveInstanceState(Bundle SavedInstanceState) 
@@ -255,6 +295,7 @@ public class MainActivity extends SherlockFragmentActivity
 			{
 				_localNetworkFragment = (LocalNetworkFragment)SherlockFragment.instantiate(MainActivity.this, LocalNetworkFragment.class.getName()); 
 				addScanStartListener(_localNetworkFragment);
+				_localNetworkFragment.addScanCompleteListener(MainActivity.this);
 			}
 			
 			return _localNetworkFragment;
@@ -275,6 +316,14 @@ public class MainActivity extends SherlockFragmentActivity
 	
 		
 	}
+
+
+
+
+
+
+
+
 	
 	
 }

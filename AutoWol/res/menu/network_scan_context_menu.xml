@@ -1,0 +1,9 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    
+  
+    <item android:id="@+id/device_list_context_menu_edit"
+        android:showAsAction="ifRoom" 
+        android:actionLayout="@layout/network_scan_context_menu_progress" ></item>
+   
+</menu>

@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">My First App</string>
+    <string name="app_name">Auto Wol</string>
     <string name="menu_settings">Settings</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_main">Auto Wol</string>
     <string name="edit_message">Enter a message</string>
     <string name="button_send">Send</string>
 
