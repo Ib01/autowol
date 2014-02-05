@@ -26,20 +26,12 @@ public class Factory
 		if(inEmulator)
 			return new MockNetwork(); //if we are in an emulator
 		
-		if (_network == null) {
-			return (INetwork) new Network(context);
-		}
-		
-		return _network;
+		return (INetwork) new Network(context);
 	}
 	  
 	public static IHostEnumerator getHostEnumerator() 
 	{
-		if (_hostEnumerator == null) {
-			return (IHostEnumerator) new NetworkScanner();
-	    }
-	    
-		return _hostEnumerator;
+		return (IHostEnumerator) new NetworkScanner();
 	}
 	  
 	public static IPinger getPinger()
@@ -50,5 +42,10 @@ public class Factory
 	public static IWolSender getWolSender(String broadcastAddress)
 	{
 		return new WolSender(broadcastAddress);
+	}
+	
+	public static IConnectionInfo getConnectionInfo()
+	{
+		return new ConnectionInfo();
 	}
 }

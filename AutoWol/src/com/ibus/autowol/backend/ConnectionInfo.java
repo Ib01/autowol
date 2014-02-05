@@ -4,20 +4,20 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-public class ConnectionInfo 
+public class ConnectionInfo implements IConnectionInfo
 {
-	public static boolean isMobileNetworkConnected(Context context) 
+	public boolean isMobileNetworkConnected(Context context) 
     {
         return isConnectedTo(context, ConnectivityManager.TYPE_MOBILE);
     }
     
-    public static boolean isWifiConnected(Context context) 
+    public boolean isWifiConnected(Context context) 
     {
         return isConnectedTo(context, ConnectivityManager.TYPE_WIFI);
     }
 	
   
-    private static boolean isConnectedTo(Context context, int connectionType) 
+    private boolean isConnectedTo(Context context, int connectionType) 
     {
         ConnectivityManager connManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if(connManager == null) //will this ever be the case?

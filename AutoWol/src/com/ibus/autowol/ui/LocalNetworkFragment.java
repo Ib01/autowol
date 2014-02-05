@@ -23,6 +23,8 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.ActionMode;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.ibus.autowol.MainActivity;
 import com.ibus.autowol.R;
@@ -30,6 +32,7 @@ import com.ibus.autowol.backend.ConnectionInfo;
 import com.ibus.autowol.backend.Database;
 import com.ibus.autowol.backend.Device;
 import com.ibus.autowol.backend.Factory;
+import com.ibus.autowol.backend.IConnectionInfo;
 import com.ibus.autowol.backend.IHostEnumerator;
 import com.ibus.autowol.backend.INetwork;
 import com.ibus.autowol.backend.IPinger;
@@ -40,23 +43,24 @@ import com.ibus.autowol.backend.ThreadResult;
 import com.ibus.autowol.backend.WolSender;
 
 public class LocalNetworkFragment extends SherlockFragment 
-implements OnScanProgressListener, OnScanStartListener, OnPingProgressListener, OnPingCompleteListener, OnDeviceWakeListener
+implements OnScanProgressListener, OnScanStartListener, OnScanCompleteListener, OnPingProgressListener, OnPingCompleteListener, OnDeviceWakeListener 
 {
 	private final static String TAG = "AutoWol-DevicesListFragment";
-	ProgressDialog _progressDialog;
+	//ProgressDialog _progressDialog;
 	IHostEnumerator _hostEnumerator;
 	IPinger _pinger;
 	INetwork _network;
 	DeviceListView _deviceListView;
-	
-	public void addScanCompleteListener(OnScanCompleteListener listener) {
-		_hostEnumerator.addOnScanCompleteListener(listener);
-    }
+	IConnectionInfo _connectionInfo;
+	ActionMode _scanActionMode;
 	
 	public LocalNetworkFragment()
 	{
+		_connectionInfo = Factory.getConnectionInfo();
+		
 		_hostEnumerator = Factory.getHostEnumerator();
 		_hostEnumerator.addOnScanProgressListener(this);
+		_hostEnumerator.addOnScanCompleteListener(this);
 		
 		_pinger = Factory.getPinger();
         _pinger.addOnPingCompleteListener(this);
@@ -68,12 +72,10 @@ implements OnScanProgressListener, OnScanStartListener, OnPingProgressListener, 
 	{
 		super.onCreate(savedInstanceState);
 	}
-
+	
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) 
 	{
-		
-		
         View v = inflater.inflate(R.layout.local_network_fragment_layout, container, false);
         return v; 
     }
@@ -88,23 +90,26 @@ implements OnScanProgressListener, OnScanStartListener, OnPingProgressListener, 
 		_deviceListView.setOnItemClickListener(new DeviceListClickListener()); 
 		_deviceListView.addOnDeviceWakeListener(this);
 		
-		_network = Factory.getNetwork(getActivity());
-		if(ConnectionInfo.isWifiConnected(getActivity()) && _network.infoIsValid())
+		if(_connectionInfo.isWifiConnected(getActivity())) 
 		{
-			Router r = _network.getRouter();
-			saveRouter(r);
-			boolean devicesFound = loadDevicesList(r, r.getBssid());
-			setNetworkHeader(r);
-			
-			if(!devicesFound)
+			_network = Factory.getNetwork(getActivity());
+			if(_network.infoIsValid())
 			{
-				//TODO: prompt user? do scan in dialogue?
-				ScanNetwork();	
+				Router r = _network.getRouter();
+				saveRouter(r);
+				boolean devicesFound = loadDevicesList(r, r.getBssid());
+				setNetworkHeader(r);
+				
+				if(!devicesFound)
+				{
+					//TODO: prompt user? do scan in dialogue?
+					ScanNetwork();	
+				}
+				
+				return;
 			}
-			
-			return;
 		}
-		
+
 		//TODO: Display network not available
 		Toast.makeText(getActivity(), "Cannot display network devices: you are not connected to a network", Toast.LENGTH_LONG).show();
 	}
@@ -113,12 +118,9 @@ implements OnScanProgressListener, OnScanStartListener, OnPingProgressListener, 
 	@Override
 	public void onResume() 
 	{
-		//fragment is visible here
 		super.onResume();
 		
-		if(ConnectionInfo.isWifiConnected(getActivity()))
-			_pinger.start(getDevicesListCopy(_deviceListView.getDevices()));
-	
+		_pinger.start(getDevicesListCopy(_deviceListView.getDevices()));
 		Log.i(TAG, "onResume");
 	}
 
@@ -142,16 +144,18 @@ implements OnScanProgressListener, OnScanStartListener, OnPingProgressListener, 
 	@Override
 	public void onScanStart() 
 	{
-		_network = Factory.getNetwork(getActivity());
-		
-		if(ConnectionInfo.isWifiConnected(getActivity()) && _network.infoIsValid())
+		if(_connectionInfo.isWifiConnected(getActivity())) 
 		{
-			Router r = _network.getRouter();
-			saveRouter(r);
-			setNetworkHeader(r);
-			
-			ScanNetwork();
-			return;
+			_network = Factory.getNetwork(getActivity());
+			if(_network.infoIsValid())
+			{
+				Router r = _network.getRouter();
+				saveRouter(r);
+				setNetworkHeader(r);
+				
+				ScanNetwork();
+				return;	
+			}
 		}
 		
 		Toast.makeText(getActivity(), "Network scan aborted: you are not connected to a network", Toast.LENGTH_LONG).show();
@@ -171,11 +175,14 @@ implements OnScanProgressListener, OnScanStartListener, OnPingProgressListener, 
 		}
 	}
 	
-	/*@Override
+	@Override
 	public void onScanComplete() 
 	{
-		_progressDialog.dismiss();
-	}*/
+		//_progressDialog.dismiss();
+		
+		_scanActionMode.finish();
+		_deviceListView.setEnabled(true);
+	}
 
 	
 	@Override
@@ -281,7 +288,7 @@ implements OnScanProgressListener, OnScanStartListener, OnPingProgressListener, 
 		TextView network = (TextView) getActivity().findViewById(R.id.local_network_fragment_network);
 	
 		//TODO: display larger network unavailable message instead of setting the header?
-		if(ConnectionInfo.isWifiConnected(getActivity())){
+		if(_connectionInfo.isWifiConnected(getActivity())){
 			network.setText("WiFi Unavailable");
 			network.setTag("");
 		}
@@ -306,10 +313,12 @@ implements OnScanProgressListener, OnScanStartListener, OnPingProgressListener, 
 	}
 	
 	
-	
-	
 	private void ScanNetwork()
 	{
+		_deviceListView.setEnabled(false);
+		if(_scanActionMode == null)
+			_scanActionMode = ((SherlockFragmentActivity)getActivity()).startActionMode(new ScanActionModeCallback());
+    	
 		/*_progressDialog = new ProgressDialog(getActivity(), AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
 		_progressDialog.setTitle("Scanning network...");
 		_progressDialog.setMessage("Please wait.");
@@ -320,6 +329,34 @@ implements OnScanProgressListener, OnScanStartListener, OnPingProgressListener, 
 		_hostEnumerator.start(_network);
 	}
 	
+    private class ScanActionModeCallback implements ActionMode.Callback
+	{
+		@Override
+		public boolean onCreateActionMode(ActionMode mode, Menu menu) 
+		{
+			MenuInflater inflater = mode.getMenuInflater();
+			inflater.inflate(R.menu.network_scan_context_menu, menu);
+			return true;
+		}
+
+		@Override
+		public boolean onActionItemClicked(ActionMode mode, MenuItem item) 
+		{
+			return true;
+		}
+
+		@Override
+		public void onDestroyActionMode(ActionMode mode) 
+		{
+			_scanActionMode = null;
+		}
+		
+		@Override
+		public boolean onPrepareActionMode(ActionMode mode, Menu menu) 
+		{
+			return false;
+		}
+	}
 
 	//
 	//Devices list item clicked

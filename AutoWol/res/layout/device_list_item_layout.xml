@@ -66,9 +66,6 @@
 		</LinearLayout>
 		
 	    
-	    
-	    
-	    
 	    <LinearLayout 
 		android:id="@+id/device_list_item_power_layout"   
 	    android:orientation="vertical"
@@ -80,7 +77,6 @@
 	    android:background="@drawable/power_button"
 	    android:layout_width="wrap_content"
 	    android:layout_height="fill_parent">
-	        
 	        
 	        <ImageView
 			        android:id="@+id/device_list_item_power_image" 
@@ -97,71 +93,7 @@
 			    	android:textSize="22sp"
 			    	android:text="Off"
 			    	/>    
-            
-	        	
-	        	
-	        
-	        
-	        
-	        <!-- <TextView android:id="@+id/device_list_item_last_scanned"
-				        android:layout_width="wrap_content"
-				    	android:layout_height="wrap_content"
-				    	android:text="12/12/2004"
-				    	android:textColor="@color/dissabled_text" 
-				    	android:gravity="right"/> -->
-	        
 	    </LinearLayout>
-	    
-	    
-	    
-	    
-	    <!-- <LinearLayout 
-		android:id="@+id/device_list_item_power_layout"   
-	    android:orientation="vertical"
-	    android:paddingLeft="10dp"
-	    android:paddingRight="2dp"
-	    android:paddingTop="2dp"
-	    android:paddingBottom="5dp"
-	    android:layout_marginBottom="5dp"
-	    android:background="@drawable/power_button"
-	    android:layout_width="wrap_content"
-	    android:layout_height="fill_parent">
-	        
-	        <LinearLayout
-	            android:orientation="horizontal"
-	            android:layout_width="fill_parent"
-	    		android:layout_height="0dp"
-	    		android:layout_weight="1">
-	    	
-	            <TextView  
-				        android:layout_width="wrap_content"
-				    	android:layout_height="wrap_content"
-				    	android:textColor="@color/dissabled_text" 
-				    	android:textSize="26sp"
-				    	android:text="Off"
-				    	android:layout_gravity="right"/>    
-	            
-	        	<ImageView
-			        android:id="@+id/device_list_item_power_image" 
-			        android:src="@drawable/ic_power_button"
-				    android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_gravity="right" />
-	        	
-	        </LinearLayout>
-	        
-	        
-	        <TextView android:id="@+id/device_list_item_last_scanned"
-				        android:layout_width="wrap_content"
-				    	android:layout_height="wrap_content"
-				    	android:text="12/12/2004"
-				    	android:textColor="@color/dissabled_text" 
-				    	android:gravity="right"/>
-	        
-	    </LinearLayout>
-	     -->
-	    
-	    
 	    
 	    
 	</LinearLayout>

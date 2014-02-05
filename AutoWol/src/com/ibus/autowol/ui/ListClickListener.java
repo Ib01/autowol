@@ -49,6 +49,9 @@ public abstract class ListClickListener implements AdapterView.OnItemClickListen
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View view, int position, long arg3) 
 	{
+		if(!_isEnabled)
+			return;
+		
 		LinearLayout border = (LinearLayout)view.findViewById(R.id.list_item_border);
 		
 		if(_selectedItems.contains(view))

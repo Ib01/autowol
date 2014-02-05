@@ -23,7 +23,7 @@ import com.ibus.autowol.ui.OnScanCompleteListener;
 import com.ibus.autowol.ui.OnScanStartListener;
 import com.ibus.autowol.ui.SchedulesListFragment;
 
-public class MainActivity extends SherlockFragmentActivity implements OnScanCompleteListener
+public class MainActivity extends SherlockFragmentActivity 
 {	
 	public static final int AddScheduleActivityRequest = 1;
 	public static final int AddDeviceActivityRequest = 2;
@@ -60,9 +60,6 @@ public class MainActivity extends SherlockFragmentActivity implements OnScanComp
         switch (item.getItemId()) 
         { 
             case R.id.devices_list_fragment_scan:
-            	if(_actionMode == null)
-    				_actionMode = startActionMode(new ScanActionModeCallback());
-            	
             	startScan();  
             	break;
             case R.id.devices_list_fragment_add:
@@ -76,45 +73,7 @@ public class MainActivity extends SherlockFragmentActivity implements OnScanComp
         return true;
     }    
    
-    
-    ActionMode _actionMode;
-    private class ScanActionModeCallback implements ActionMode.Callback
-	{
-		@Override
-		public boolean onCreateActionMode(ActionMode mode, Menu menu) 
-		{
-			MenuInflater inflater = mode.getMenuInflater();
-			inflater.inflate(R.menu.network_scan_context_menu, menu);
-			return true;
-		}
-
-		@Override
-		public boolean onActionItemClicked(ActionMode mode, MenuItem item) 
-		{
-			return true;
-		}
-
-		@Override
-		public void onDestroyActionMode(ActionMode mode) 
-		{
-			_actionMode = null;
-		}
-		
-		@Override
-		public boolean onPrepareActionMode(ActionMode mode, Menu menu) 
-		{
-			return false;
-		}
-		
-		
-	}
-    
-    
-    @Override
-	public void onScanComplete() {
-    	_actionMode.finish();
-	}
-	
+   
 
 	private void startScan()
     {
@@ -295,7 +254,6 @@ public class MainActivity extends SherlockFragmentActivity implements OnScanComp
 			{
 				_localNetworkFragment = (LocalNetworkFragment)SherlockFragment.instantiate(MainActivity.this, LocalNetworkFragment.class.getName()); 
 				addScanStartListener(_localNetworkFragment);
-				_localNetworkFragment.addScanCompleteListener(MainActivity.this);
 			}
 			
 			return _localNetworkFragment;

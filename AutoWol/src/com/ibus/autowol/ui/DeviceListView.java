@@ -1,13 +1,23 @@
 package com.ibus.autowol.ui;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.ActionMode;
+import com.actionbarsherlock.view.MenuItem;
+import com.ibus.autowol.MainActivity;
 import com.ibus.autowol.R;
 import com.ibus.autowol.backend.Device;
+import com.ibus.autowol.backend.Factory;
+import com.ibus.autowol.backend.IWolSender;
+
 import android.content.Context;
+import android.content.Intent;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -226,6 +236,68 @@ public class DeviceListView extends ListView
 		mac.setTextColor(getContext().getResources().getColor(R.color.text));
 		pcName.setTextColor(getContext().getResources().getColor(R.color.text));*/
 	}
+	
+	
+	// /////////////////////////////////////////////////////////////////////////////////////////////////
+	// Click Listener
+	// /////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	//
+	//Devices list item clicked
+	//
+	public class DeviceListClickListener extends ListClickListener
+	{
+		public DeviceListClickListener() 
+		{
+			super((SherlockFragmentActivity)getActivity(), R.menu.local_network_fragment_context_menu);
+		}
+
+		@Override
+		public boolean actionItemClicked(ActionMode mode, MenuItem item) 
+		{
+			if(item.getItemId() == R.id.device_list_context_menu_edit)
+			{
+				//TODO: WE ARE EDITING THE FIRST ITEM ONLY BUT THE USER CAN SELECT MULTIPLE ITEMS 
+				List<Device> dl = getSelectedItems();
+				int devId = dl.get(0).getPrimaryKey();
+				
+				Intent myIntent = new Intent();
+		        myIntent.setClass(getContext(), AddDeviceActivity.class);
+		        myIntent.putExtra("DeviceId", devId);	
+		        
+		        getActivity().startActivityForResult(myIntent, MainActivity.UpdateDeviceActivityRequest); 
+			}
+			else if(item.getItemId() == R.id.device_list_context_menu_delete)
+			{
+            	List<Device> dl = getSelectedItems();
+            	
+            	_deviceListView.removeDevices(dl);
+            	deleteDevices(dl);
+            	refreshPinger();
+            	
+            	mode.finish();
+            	
+                return false;
+			}
+			else if(item.getItemId() == R.id.device_list_context_menu_wake)
+			{
+				List<Device> dl = getSelectedItems();
+				try 
+				{
+					IWolSender sender = Factory.getWolSender(_network.getBroadcastAddress());
+					sender.start(getDevicesListCopy(dl));
+				} catch (IOException e) {
+
+					Log.e(TAG, "could not get brodacast address for unknown reason", e);
+				}
+				
+			}
+			
+			return true;
+		}
+	}
+	
+	
 	
 	
 	// /////////////////////////////////////////////////////////////////////////////////////////////////
