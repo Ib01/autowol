@@ -29,14 +29,14 @@ public abstract class ListClickListener implements AdapterView.OnItemClickListen
 	HashSet<View> _selectedItems = new HashSet<View>();
 	ActionMode _actionMode;
 	SherlockFragmentActivity _activity;
-	private boolean _isEnabled = true;
+	/*private boolean _isEnabled = true;
 	
 	public boolean isEnabled() {
 		return _isEnabled;
 	}
 	public void setEnabled(boolean isEnabled) {
 		_isEnabled = isEnabled;
-	}
+	}*/
 
 
 	public ListClickListener(SherlockFragmentActivity activity, int selectionContextMenu)
@@ -49,8 +49,8 @@ public abstract class ListClickListener implements AdapterView.OnItemClickListen
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View view, int position, long arg3) 
 	{
-		if(!_isEnabled)
-			return;
+		/*if(!_isEnabled)
+			return;*/
 		
 		LinearLayout border = (LinearLayout)view.findViewById(R.id.list_item_border);
 		

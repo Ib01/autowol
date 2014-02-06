@@ -239,68 +239,6 @@ public class DeviceListView extends ListView
 	
 	
 	// /////////////////////////////////////////////////////////////////////////////////////////////////
-	// Click Listener
-	// /////////////////////////////////////////////////////////////////////////////////////////////////
-	
-	//
-	//Devices list item clicked
-	//
-	public class DeviceListClickListener extends ListClickListener
-	{
-		public DeviceListClickListener() 
-		{
-			super((SherlockFragmentActivity)getActivity(), R.menu.local_network_fragment_context_menu);
-		}
-
-		@Override
-		public boolean actionItemClicked(ActionMode mode, MenuItem item) 
-		{
-			if(item.getItemId() == R.id.device_list_context_menu_edit)
-			{
-				//TODO: WE ARE EDITING THE FIRST ITEM ONLY BUT THE USER CAN SELECT MULTIPLE ITEMS 
-				List<Device> dl = getSelectedItems();
-				int devId = dl.get(0).getPrimaryKey();
-				
-				Intent myIntent = new Intent();
-		        myIntent.setClass(getContext(), AddDeviceActivity.class);
-		        myIntent.putExtra("DeviceId", devId);	
-		        
-		        getActivity().startActivityForResult(myIntent, MainActivity.UpdateDeviceActivityRequest); 
-			}
-			else if(item.getItemId() == R.id.device_list_context_menu_delete)
-			{
-            	List<Device> dl = getSelectedItems();
-            	
-            	_deviceListView.removeDevices(dl);
-            	deleteDevices(dl);
-            	refreshPinger();
-            	
-            	mode.finish();
-            	
-                return false;
-			}
-			else if(item.getItemId() == R.id.device_list_context_menu_wake)
-			{
-				List<Device> dl = getSelectedItems();
-				try 
-				{
-					IWolSender sender = Factory.getWolSender(_network.getBroadcastAddress());
-					sender.start(getDevicesListCopy(dl));
-				} catch (IOException e) {
-
-					Log.e(TAG, "could not get brodacast address for unknown reason", e);
-				}
-				
-			}
-			
-			return true;
-		}
-	}
-	
-	
-	
-	
-	// /////////////////////////////////////////////////////////////////////////////////////////////////
 	// Adapter
 	// /////////////////////////////////////////////////////////////////////////////////////////////////
 	
@@ -369,6 +307,15 @@ public class DeviceListView extends ListView
 	{
 		_deviceWakeListeners.add(listener);
     }
+	
+	
+	
+	
+	public void setEnabled(boolean enabled)
+	{
+		super.setEnabled(enabled);
+		
+	}
 	
 
 }
