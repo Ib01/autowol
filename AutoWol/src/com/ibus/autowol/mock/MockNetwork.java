@@ -90,7 +90,7 @@ public class MockNetwork implements INetwork
 
 
 	@Override
-	public String getBroadcastAddress() throws IOException {
+	public String getBroadcastAddress() {
 		// TODO Auto-generated method stub
 		return null;
 	}
