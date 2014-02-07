@@ -101,6 +101,7 @@ public class NetworkScanner implements Runnable, IHostEnumerator
 			{
 				msg = _messageHandler.obtainMessage(UPDATE_COMPLETE);
 				_messageHandler.sendMessage(msg);
+				Log.i(TAG, "exiting thread");
 				return;
 			}
 				
@@ -130,6 +131,7 @@ public class NetworkScanner implements Runnable, IHostEnumerator
 			{
 				msg = _messageHandler.obtainMessage(UPDATE_COMPLETE);
 				_messageHandler.sendMessage(msg);
+				Log.i(TAG, "exiting thread");
 				return;
 			}
 		}
@@ -138,8 +140,7 @@ public class NetworkScanner implements Runnable, IHostEnumerator
 	
 		msg = _messageHandler.obtainMessage(UPDATE_COMPLETE);
 		_messageHandler.sendMessage(msg);
-		return;
-		
+		Log.i(TAG, "exiting thread");
 	}	
 	
 	

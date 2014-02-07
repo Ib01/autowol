@@ -24,8 +24,6 @@ public class PersistantPinger implements Runnable, IPinger
 	private boolean _continue;
 	private List<Device> _devices = new ArrayList<Device>();
 	private static int UPDATE_PROGRESS = 1;
-	//private static int UPDATE_COMPLETE = 2;
-	
 	
 	//handler used by the thread below to marshel messages back to the main ui thread. it is probably not neccessary 
 	//to declare this class static since it is not within scope of the activity so it shouldnt leak the activity?

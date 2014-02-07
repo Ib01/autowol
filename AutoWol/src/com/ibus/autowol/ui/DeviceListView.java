@@ -282,6 +282,8 @@ public class DeviceListView extends ListView
 				powerlayout.setTag(host);
 				powerlayout.setOnClickListener(new PowerButtonListener());
 				
+				//((LinearLayout)powerlayout).setClickable(false);
+				
 				setViewStyle(v);
 			}
 			
@@ -309,12 +311,22 @@ public class DeviceListView extends ListView
     }
 	
 	
-	
-	
 	public void setEnabled(boolean enabled)
 	{
 		super.setEnabled(enabled);
-		
+		setPowerButtonEnabled(enabled);
+	}
+	
+	
+	public void setPowerButtonEnabled(boolean enabled)
+	{
+		for (int i = 0; i < this.getChildCount(); ++i) 
+		{
+			View v = this.getChildAt(i);
+			LinearLayout powerlayout = (LinearLayout) v.findViewById(R.id.device_list_item_power_layout);
+			
+			powerlayout.setClickable(enabled);
+		}
 	}
 	
 

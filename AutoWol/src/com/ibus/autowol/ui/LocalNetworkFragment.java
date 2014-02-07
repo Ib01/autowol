@@ -178,9 +178,10 @@ implements OnScanProgressListener, OnScanStartListener, OnScanCompleteListener, 
 	@Override
 	public void onScanComplete() 
 	{
-		//_progressDialog.dismiss();
+		//_scanActionMode  may be set to null if user pressed back button
+		if(_scanActionMode != null)
+			_scanActionMode.finish();
 		
-		_scanActionMode.finish();
 		_deviceListView.setEnabled(true);
 	}
 
@@ -217,8 +218,6 @@ implements OnScanProgressListener, OnScanStartListener, OnScanCompleteListener, 
 		
 	}
 	
-	
-
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	// Utilities //////////////////////////////////////////////////////////////////
@@ -349,6 +348,7 @@ implements OnScanProgressListener, OnScanStartListener, OnScanCompleteListener, 
 		public void onDestroyActionMode(ActionMode mode) 
 		{
 			_scanActionMode = null;
+			_hostEnumerator.stop();
 		}
 		
 		@Override
