@@ -9,7 +9,7 @@ public class Factory
 	//ONLY SET TO TRUE IF WE ARE IN AN EMULATOR. 
 	private static boolean inEmulator = false;
 	
-	private static INetwork _network;
+	/*private static INetwork _network;
 	private static IHostEnumerator _hostEnumerator;
 		  
 	public static void setNetwork(INetwork network) {
@@ -18,7 +18,7 @@ public class Factory
 	  
 	public static void setHostEnumerator(IHostEnumerator hostEnumerator) {
 		_hostEnumerator = hostEnumerator;
-	}
+	}*/
 	
 	
 	public static INetwork getNetwork(Context context) 

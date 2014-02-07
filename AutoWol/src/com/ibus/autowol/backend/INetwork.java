@@ -18,6 +18,6 @@ public interface INetwork
 	public String getNetworkStartIp();
 	public boolean infoIsValid();
 	
-    public String getBroadcastAddress() throws IOException; 
+    public String getBroadcastAddress();
     
 }

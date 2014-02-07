@@ -46,17 +46,19 @@ public class LocalNetworkFragment extends SherlockFragment
 implements OnScanProgressListener, OnScanStartListener, OnScanCompleteListener, OnPingProgressListener, OnPingCompleteListener, OnDeviceWakeListener 
 {
 	private final static String TAG = "AutoWol-DevicesListFragment";
-	//ProgressDialog _progressDialog;
 	IHostEnumerator _hostEnumerator;
 	IPinger _pinger;
 	INetwork _network;
-	DeviceListView _deviceListView;
 	IConnectionInfo _connectionInfo;
+	//IWolSender _wolSender;
+	DeviceListView _deviceListView;
 	ActionMode _scanActionMode;
 	
 	public LocalNetworkFragment()
 	{
 		_connectionInfo = Factory.getConnectionInfo();
+		
+		//_wolSender = Factory.getWolSender(_network.getBroadcastAddress());
 		
 		_hostEnumerator = Factory.getHostEnumerator();
 		_hostEnumerator.addOnScanProgressListener(this);
@@ -181,8 +183,6 @@ implements OnScanProgressListener, OnScanStartListener, OnScanCompleteListener, 
 		//_scanActionMode  may be set to null if user pressed back button
 		if(_scanActionMode != null)
 			_scanActionMode.finish();
-		
-		_deviceListView.setEnabled(true);
 	}
 
 	
@@ -214,14 +214,37 @@ implements OnScanProgressListener, OnScanStartListener, OnScanCompleteListener, 
 	@Override
 	public void onDeviceWake(Device device) 
 	{
-		int i = 0;
-		
+		wakeDevice(device);
 	}
 	
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////
 	// Utilities //////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	//called after AddDeviceActivity has completed successfully
+	public void addOrUpdateDevice(int devicePk) 
+	{
+		Device d = getDevice(devicePk);
+		_deviceListView.addOrUpdateDevice(d);
+		refreshPinger();
+	}
+	
+	public void refreshPinger()
+	{
+		_pinger.setDevices(getDevicesListCopy(_deviceListView.getDevices()));
+	}
+	
+	
+	public List<Device> getDevicesListCopy(List<Device> list)
+	{
+		List<Device> dl = new ArrayList<Device>(); 
+		for(Device d : list)
+			dl.add(d.getCopy());
+		
+		return dl;
+	}
+	
 	
 	public void deleteDevices(List<Device> devices) 
 	{
@@ -318,13 +341,6 @@ implements OnScanProgressListener, OnScanStartListener, OnScanCompleteListener, 
 		if(_scanActionMode == null)
 			_scanActionMode = ((SherlockFragmentActivity)getActivity()).startActionMode(new ScanActionModeCallback());
     	
-		/*_progressDialog = new ProgressDialog(getActivity(), AlertDialog.THEME_DEVICE_DEFAULT_LIGHT);
-		_progressDialog.setTitle("Scanning network...");
-		_progressDialog.setMessage("Please wait.");
-		_progressDialog.setCancelable(false);
-		_progressDialog.setIndeterminate(true);
-		_progressDialog.show();*/
-		
 		_hostEnumerator.start(_network);
 	}
 	
@@ -349,6 +365,7 @@ implements OnScanProgressListener, OnScanStartListener, OnScanCompleteListener, 
 		{
 			_scanActionMode = null;
 			_hostEnumerator.stop();
+			_deviceListView.setEnabled(true);
 		}
 		
 		@Override
@@ -397,48 +414,34 @@ implements OnScanProgressListener, OnScanStartListener, OnScanCompleteListener, 
 			else if(item.getItemId() == R.id.device_list_context_menu_wake)
 			{
 				List<Device> dl = getSelectedItems();
-				try 
-				{
-					IWolSender sender = Factory.getWolSender(_network.getBroadcastAddress());
-					sender.start(getDevicesListCopy(dl));
-				} catch (IOException e) {
-
-					Log.e(TAG, "could not get brodacast address for unknown reason", e);
-				}
-				
+				wakeDevices(dl);
 			}
 			
 			return true;
 		}
 	}
 	
-	
-
-
-	//called after AddDeviceActivity has completed successfully
-	public void addOrUpdateDevice(int devicePk) 
+	private void wakeDevice(Device device)
 	{
-		Device d = getDevice(devicePk);
-		_deviceListView.addOrUpdateDevice(d);
-		refreshPinger();
-	}
-	
-	public void refreshPinger()
-	{
-		_pinger.setDevices(getDevicesListCopy(_deviceListView.getDevices()));
-	}
-	
-	
-	public List<Device> getDevicesListCopy(List<Device> list)
-	{
-		List<Device> dl = new ArrayList<Device>(); 
-		for(Device d : list)
-			dl.add(d.getCopy());
+		List<Device> l = new ArrayList<Device>();
+		l.add(device);
 		
-		return dl;
+		wakeDevices(l);
+	}
+	
+	
+	private void wakeDevices(List<Device> devices)
+	{
+		if(_connectionInfo.isWifiConnected(getActivity())) 
+		{
+			//to get here devices must be displaying. and if so then presumably we must have valid 
+			//Network info if object? 
+			IWolSender sender = Factory.getWolSender(_network.getBroadcastAddress());
+			sender.start(getDevicesListCopy(devices));
+		}
 	}
 
-	
+
 	
 	
 }
