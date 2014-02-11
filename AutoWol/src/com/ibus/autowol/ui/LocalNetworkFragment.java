@@ -50,15 +50,12 @@ implements OnScanProgressListener, OnScanStartListener, OnScanCompleteListener, 
 	IPinger _pinger;
 	INetwork _network;
 	IConnectionInfo _connectionInfo;
-	//IWolSender _wolSender;
 	DeviceListView _deviceListView;
 	ActionMode _scanActionMode;
 	
 	public LocalNetworkFragment()
 	{
 		_connectionInfo = Factory.getConnectionInfo();
-		
-		//_wolSender = Factory.getWolSender(_network.getBroadcastAddress());
 		
 		_hostEnumerator = Factory.getHostEnumerator();
 		_hostEnumerator.addOnScanProgressListener(this);
@@ -307,6 +304,9 @@ implements OnScanProgressListener, OnScanStartListener, OnScanCompleteListener, 
 	
 	public void setNetworkHeader(Router router)
 	{
+		/*TextView count = (TextView) getActivity().findViewById(R.id.local_network_fragment_network_type);
+		count.setText("Wireless Network");*/
+		
 		TextView network = (TextView) getActivity().findViewById(R.id.local_network_fragment_network);
 	
 		//TODO: display larger network unavailable message instead of setting the header?
@@ -319,6 +319,7 @@ implements OnScanProgressListener, OnScanStartListener, OnScanCompleteListener, 
 		network.setTag(router.getBssid());
 		setDevicesLiveCount(router);
 		setLastScanned(router);
+		
 		return;
 	}
 	

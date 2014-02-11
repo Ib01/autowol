@@ -37,7 +37,6 @@ public class AddDeviceActivity extends SherlockActivity
 		ActionBar ab = getSupportActionBar();
 		ab.setDisplayHomeAsUpEnabled(true);
 		
-		
 		Bundle bundle=this.getIntent().getExtras();
 		
 		if(bundle != null && bundle.containsKey("DeviceId")){

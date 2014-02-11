@@ -62,9 +62,13 @@ public class Network implements INetwork
 		_router.setLastScanned(android.text.format.DateFormat.getDateFormat(_context).format(new Date()));
 		
 		_netmaskIp = IpAddressUtil.getStringFromIntSigned(wifiManager.getDhcpInfo().netmask); //will we always have this info?
-		_networkEndIp = IpAddressUtil.getStringFromLongUnsigned(GetNetworkBound(false));
-		_networkStartIp = IpAddressUtil.getStringFromLongUnsigned(GetNetworkBound(true));
 		_broadcastAddress = getBroadcastAddress(wifiManager.getDhcpInfo().ipAddress, wifiManager.getDhcpInfo().netmask);
+		
+		Device device = getDevice();
+		if(device != null){
+			_networkEndIp = IpAddressUtil.getStringFromLongUnsigned(GetNetworkBound(false, device));
+			_networkStartIp = IpAddressUtil.getStringFromLongUnsigned(GetNetworkBound(true, device));
+		}
 		
 		if(_router.getBssid() == null )
 			Log.w(TAG, "Bssid is null in Network.Refresh()");
@@ -88,8 +92,8 @@ public class Network implements INetwork
 		if(_router == null)
 			return false;
 		
-		return (_router.getBssid() != null 
-				&& _router.getSsid() != null
+		return (_router.getBssid() != null && !_router.getBssid().isEmpty()  
+				&& _router.getSsid() != null && !_router.getSsid().isEmpty()
 				&& IpAddressUtil.isValidIp(_router.getIpAddress()) 
 				&& IpAddressUtil.isValidNetworkMask(_netmaskIp)
 				&& IpAddressUtil.isValidIp(_networkEndIp)
@@ -99,70 +103,10 @@ public class Network implements INetwork
 	
 	
 	
-	  /**
-	   * Calculate the broadcast IP we need to send the packet along. If we send it
-	   * to 255.255.255.255, it never gets sent. I guess this has something to do
-	   * with the mobile network not wanting to do broadcast.
-	   */
-	/*  public String getBroadcastAddress() throws IOException 
-	  {
-			WifiManager wifiManager = (WifiManager) _context.getSystemService(Context.WIFI_SERVICE);
-	
-			DhcpInfo dhcp = wifiManager.getDhcpInfo();
-			if (dhcp == null) {
-			  Log.d(TAG, "Could not get dhcp info");
-			  return null;
-			}
-			
-			int broadcast = (dhcp.ipAddress & dhcp.netmask) | ~dhcp.netmask;
-			byte[] quads = new byte[4];
-			for (int k = 0; k < 4; k++)
-			  quads[k] = (byte) ((broadcast >> k * 8) & 0xFF);
-			
-			InetAddress ad = InetAddress.getByAddress(quads);
-			return ad.getHostAddress();
-	  }*/
-	
-	
-    
-	/*public String getNetmaskIp() 
-	{
-		WifiManager wifiManager = (WifiManager) _context.getSystemService(Context.WIFI_SERVICE);
-		if (wifiManager != null) 
-		{	
-			String _netmaskIp = IpAddressUtil.getStringFromIntSigned(wifiManager.getDhcpInfo().netmask);
-			return _netmaskIp;
-		}
-		
-		throw new RuntimeException("Could not retrieve netmask. could not retrieve the system service: WIFI_SERVICE");
-	}*/
-	
-	
-	/*public String getNetworkEndIp() 
-	{
-		return GetNetworkBound(false);
-	}
-	
-	public String getNetworkStartIp() 
-	{
-		return GetNetworkBound(true);
-	}*/
-	
-    
-	/*public boolean IsGateway(String ipAddress)
-    {
-    	if(ipAddress == null)
-    		return false;
-    	
-    	return ipAddress.equals(getRouter().getIpAddress());
-    }*/
-    
-   
     
     //set ip of the device to the first valid ip found a network interface
     private Device getDevice() 
     {
-    	Device device = new Device();
         try 
         {
         	for (Enumeration<NetworkInterface> nics = NetworkInterface.getNetworkInterfaces(); nics.hasMoreElements();) 
@@ -172,20 +116,30 @@ public class Network implements INetwork
                 String ip = getInterfaceFirstIp(nic);
                 if (IpAddressUtil.isValidIp(ip)) 
                 {
-                	device.setName(nic.getName());
-                	device.setIpAddress(ip);
-                	device.setMacAddress(MacAddressUtil.getStringFromBytes(nic.getHardwareAddress()));
-                    
-                	return device;
+                	//this can be null staight after reconnection of the network 9even thought the network shows as up) grrr.
+                	if(nic.getHardwareAddress() != null)
+                	{
+                		Device device = new Device();
+                		device.setName(nic.getName());
+                    	device.setIpAddress(ip);
+                    	device.setMacAddress(MacAddressUtil.getStringFromBytes(nic.getHardwareAddress()));
+                
+                    	return device;	
+                	}
+                	else
+                	{
+                		Log.e(TAG, "nic.getHardwareAddress() IS null");
+                	}
                 }
             }
             
         } catch (SocketException e) 
         {
             Log.e(TAG, "Could not get device in Network.getDevice()", e);
+            throw new RuntimeException("Could not get device in Network.getDevice(). SocketException thrown");    
         }
         
-        throw new RuntimeException("Could not get device in Network.getDevice()");
+		return null; 
     }
     
     
@@ -213,11 +167,9 @@ public class Network implements INetwork
     }
     
 	
-	private long GetNetworkBound(boolean getStart)
+	private long GetNetworkBound(boolean getStart, Device device )
 	{
 		Cidr _cidr = new Cidr(_netmaskIp);
-		Device device = getDevice();
-    	
     	long numericDeviceIp = IpAddressUtil.getUnsignedLongFromString(device.getIpAddress()); 
     	
     	// Detected IP
@@ -245,8 +197,8 @@ public class Network implements INetwork
 	private WifiManager getWifiManager()
 	{
 		WifiManager wifiManager = (WifiManager) _context.getSystemService(Context.WIFI_SERVICE);
-		if(wifiManager == null) //will this ever be the happen?
-		throw new RuntimeException("Could not get router. Could not retrieve the system service: WIFI_SERVICE");
+		if(wifiManager == null) //this should never happen?
+			throw new RuntimeException("Could not get router. Could not retrieve the system service: WIFI_SERVICE");
 		  
 		return wifiManager;
 	}
@@ -273,7 +225,66 @@ public class Network implements INetwork
     
     
     
-    
+
+/**
+ * Calculate the broadcast IP we need to send the packet along. If we send it
+ * to 255.255.255.255, it never gets sent. I guess this has something to do
+ * with the mobile network not wanting to do broadcast.
+ */
+/*  public String getBroadcastAddress() throws IOException 
+{
+		WifiManager wifiManager = (WifiManager) _context.getSystemService(Context.WIFI_SERVICE);
+
+		DhcpInfo dhcp = wifiManager.getDhcpInfo();
+		if (dhcp == null) {
+		  Log.d(TAG, "Could not get dhcp info");
+		  return null;
+		}
+		
+		int broadcast = (dhcp.ipAddress & dhcp.netmask) | ~dhcp.netmask;
+		byte[] quads = new byte[4];
+		for (int k = 0; k < 4; k++)
+		  quads[k] = (byte) ((broadcast >> k * 8) & 0xFF);
+		
+		InetAddress ad = InetAddress.getByAddress(quads);
+		return ad.getHostAddress();
+}*/
+
+
+
+/*public String getNetmaskIp() 
+{
+	WifiManager wifiManager = (WifiManager) _context.getSystemService(Context.WIFI_SERVICE);
+	if (wifiManager != null) 
+	{	
+		String _netmaskIp = IpAddressUtil.getStringFromIntSigned(wifiManager.getDhcpInfo().netmask);
+		return _netmaskIp;
+	}
+	
+	throw new RuntimeException("Could not retrieve netmask. could not retrieve the system service: WIFI_SERVICE");
+}*/
+
+
+/*public String getNetworkEndIp() 
+{
+	return GetNetworkBound(false);
+}
+
+public String getNetworkStartIp() 
+{
+	return GetNetworkBound(true);
+}*/
+
+
+/*public boolean IsGateway(String ipAddress)
+{
+	if(ipAddress == null)
+		return false;
+	
+	return ipAddress.equals(getRouter().getIpAddress());
+}*/
+
+
 
 
 
