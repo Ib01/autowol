@@ -46,7 +46,6 @@ public class AddDeviceActivity extends SherlockActivity
 		}
 		
 		
-		
 		EditText ip = (EditText) findViewById(R.id.add_device_activity_ip_address);
 		ip.setFilters(new InputFilter[] {new IpAddressTextFilter()});
     }
