@@ -20,7 +20,8 @@
 	<!-- android:uiOptions="splitActionBarWhenNarrow" 
 	android:theme="@style/Theme.Sherlock.Light.DarkActionBar"-->
 	
-    <application
+    <application 
+        android:logo="@drawable/ablogo"
         android:icon="@drawable/logo"
         android:label="@string/app_name"
         android:theme="@style/AutoWolTheme">
