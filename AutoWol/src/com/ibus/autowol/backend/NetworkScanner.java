@@ -144,12 +144,14 @@ public class NetworkScanner implements Runnable, IHostEnumerator
 	}	
 	
 	
-	
+	public boolean isAlive(){
+		return (_scannerThread != null && _scannerThread.isAlive());
+	}
 
 	@Override
 	public void start(INetwork network) 
 	{
-		if(_scannerThread == null || !_scannerThread.isAlive())
+		if(!isAlive())
 		{
 			_networkStartIp =  network.getNetworkStartIp();
 			_networkEndIp = network.getNetworkEndIp();

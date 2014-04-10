@@ -8,7 +8,9 @@ import java.util.List;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -52,6 +54,7 @@ implements OnScanProgressListener, OnScanStartListener, OnScanCompleteListener, 
 	IConnectionInfo _connectionInfo;
 	DeviceListView _deviceListView;
 	ActionMode _scanActionMode;
+	//SharedPreferences settings;
 	
 	public LocalNetworkFragment()
 	{
@@ -88,29 +91,6 @@ implements OnScanProgressListener, OnScanStartListener, OnScanCompleteListener, 
 		_deviceListView = (DeviceListView) getActivity().findViewById(R.id.local_network_fragment_device_list);
 		_deviceListView.setOnItemClickListener(new DeviceListClickListener()); 
 		_deviceListView.addOnDeviceWakeListener(this);
-		
-		if(_connectionInfo.isWifiConnected(getActivity())) 
-		{
-			_network = Factory.getNetwork(getActivity());
-			if(_network.infoIsValid())
-			{
-				Router r = _network.getRouter();
-				saveRouter(r);
-				boolean devicesFound = loadDevicesList(r, r.getBssid());
-				setNetworkHeader(r);
-				
-				if(!devicesFound)
-				{
-					//TODO: prompt user? do scan in dialogue?
-					ScanNetwork();	
-				}
-				
-				return;
-			}
-		}
-
-		//TODO: Display network not available
-		Toast.makeText(getActivity(), "Cannot display network devices: you are not connected to a network", Toast.LENGTH_LONG).show();
 	}
 	
 	
@@ -118,9 +98,36 @@ implements OnScanProgressListener, OnScanStartListener, OnScanCompleteListener, 
 	public void onResume() 
 	{
 		super.onResume();
+		Log.i(TAG, "*** entering onResume *** ");
+		
+		if(_connectionInfo.isWifiConnected(getActivity())) 
+		{
+			_network = Factory.getNetwork(getActivity());
+			if(_network.infoIsValid())
+			{
+				Router r = _network.getRouter();
+				boolean isNewNetwork = (getRouter(r.getBssid()) == null);
+				
+				saveRouter(r);
+				loadDevicesList(r, r.getBssid());
+				setNetworkHeader(r);
+
+				if(isNewNetwork)
+					ScanNetwork(true);
+			}
+			else
+			{
+				//TODO: Display network not available
+				Toast.makeText(getActivity(), "Cannot display network devices: you are not connected to a network", Toast.LENGTH_LONG).show();	
+			}
+		}
+		else
+		{
+			//TODO: Display network not available
+			Toast.makeText(getActivity(), "Cannot display network devices: you are not connected to a network", Toast.LENGTH_LONG).show();		
+		}
 		
 		_pinger.start(getDevicesListCopy(_deviceListView.getDevices()));
-		Log.i(TAG, "onResume");
 	}
 
 	@Override
@@ -152,7 +159,7 @@ implements OnScanProgressListener, OnScanStartListener, OnScanCompleteListener, 
 				saveRouter(r);
 				setNetworkHeader(r);
 				
-				ScanNetwork();
+				ScanNetwork(false);
 				return;	
 			}
 		}
@@ -272,7 +279,7 @@ implements OnScanProgressListener, OnScanStartListener, OnScanCompleteListener, 
 		database.close();
 	}
 	
-	//Router router = _network.getRouter();
+	
 	public void saveRouter(Router router) 
 	{
 		Database database = new Database(getActivity());
@@ -280,6 +287,17 @@ implements OnScanProgressListener, OnScanStartListener, OnScanCompleteListener, 
 		database.saveRouterForBssid(router);
 		database.close();
 	}
+	
+	public Router getRouter(String bssid) 
+	{
+		Database database = new Database(getActivity());
+		database.open();
+		Router r = database.getRouterForBssid(bssid);
+		database.close();
+		
+		return r;
+	}
+	
 	
 	public boolean loadDevicesList(Router router, String bssid)
 	{
@@ -304,9 +322,6 @@ implements OnScanProgressListener, OnScanStartListener, OnScanCompleteListener, 
 	
 	public void setNetworkHeader(Router router)
 	{
-		/*TextView count = (TextView) getActivity().findViewById(R.id.local_network_fragment_network_type);
-		count.setText("Wireless Network");*/
-		
 		TextView network = (TextView) getActivity().findViewById(R.id.local_network_fragment_network);
 	
 		//TODO: display larger network unavailable message instead of setting the header?
@@ -335,8 +350,38 @@ implements OnScanProgressListener, OnScanStartListener, OnScanCompleteListener, 
 		lastScanned.setText(_network.getRouter().getLastScanned());
 	}
 	
+	private void ScanNetwork(boolean prompt)
+	{
+		if(_hostEnumerator.isAlive())
+			return;
+		
+		if(prompt)
+		{
+			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+			builder.setMessage("Would you like to scan for devices now? You can scan your network at anytime by clicking on the scan button.")
+			.setTitle("New network detected");
+			
+			builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+			           public void onClick(DialogInterface dialog, int id) {
+			        	   doScan();
+			           }
+			       });
+			builder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+		           public void onClick(DialogInterface dialog, int id) {
+		           }
+		       });
+			
+			AlertDialog dialog = builder.create();
+			dialog.show();
+			
+			return;
+		}
+		
+		doScan();
+	}
 	
-	private void ScanNetwork()
+	
+	private void doScan()
 	{
 		_deviceListView.setEnabled(false);
 		if(_scanActionMode == null)
@@ -344,6 +389,7 @@ implements OnScanProgressListener, OnScanStartListener, OnScanCompleteListener, 
     	
 		_hostEnumerator.start(_network);
 	}
+	
 	
     private class ScanActionModeCallback implements ActionMode.Callback
 	{

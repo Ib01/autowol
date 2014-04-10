@@ -11,7 +11,7 @@ public interface IHostEnumerator
 	void stop();
 	void addOnScanProgressListener(OnScanProgressListener listener);
 	void addOnScanCompleteListener(OnScanCompleteListener listener);
-	
+	public boolean isAlive();	
 }
 
 
